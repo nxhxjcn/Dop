@@ -1,0 +1,681 @@
+-- PIZZA COOK TIME MANIPULATION TEST SCRIPT (FIXED GUI)
+print("=== PIZZA COOK TIME SPEED TEST LOADING ===")
+
+-- Get player and character
+local player = game:GetService("Players").LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local root = character:WaitForChild("HumanoidRootPart")
+local humanoid = character:WaitForChild("Humanoid")
+
+-- Find network
+local network
+local reg = debug.getregistry()
+for i = 1, #reg do
+    local f = reg[i]
+    if type(f) == "table" and rawget(f, "FireServer") and rawget(f, "BindEvents") then
+        network = f
+        break
+    end
+end
+
+print("Network found: " .. tostring(network ~= nil))
+
+-- Wait a moment for CoreGui to be ready
+task.wait(0.5)
+
+-- Create GUI with better error handling
+local gui = Instance.new("ScreenGui")
+gui.Name = "CookTimeTest"
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+gui.ResetOnSpawn = false
+
+-- Try multiple parent locations
+local success = pcall(function()
+    gui.Parent = game:GetService("CoreGui")
+end)
+
+if not success then
+    print("CoreGui failed, trying PlayerGui...")
+    gui.Parent = player:WaitForChild("PlayerGui")
+end
+
+print("GUI Parent: " .. tostring(gui.Parent))
+
+local main = Instance.new("Frame")
+main.Name = "main"
+main.Size = UDim2.new(0, 500, 0, 600)
+main.Position = UDim2.new(0.5, -250, 0.5, -300)
+main.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+main.BorderSizePixel = 2
+main.BorderColor3 = Color3.fromRGB(255, 255, 255)
+main.Active = true
+main.Draggable = true
+main.Parent = gui
+
+local topbar = Instance.new("Frame")
+topbar.Name = "topbar"
+topbar.Size = UDim2.new(1, 0, 0, 35)
+topbar.BackgroundColor3 = Color3.fromRGB(65, 65, 65)
+topbar.BorderSizePixel = 0
+topbar.Parent = main
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, -100, 1, 0)
+title.Position = UDim2.new(0, 5, 0, 0)
+title.BackgroundTransparency = 1
+title.Text = "Pizza Cook Time Speed Test"
+title.TextColor3 = Color3.new(1, 1, 1)
+title.TextSize = 18
+title.Font = Enum.Font.GothamBold
+title.TextXAlignment = Enum.TextXAlignment.Left
+title.Parent = topbar
+
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 30, 0, 30)
+closeBtn.Position = UDim2.new(1, -32, 0, 2)
+closeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+closeBtn.Text = "X"
+closeBtn.TextColor3 = Color3.new(1, 1, 1)
+closeBtn.TextSize = 18
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.BorderSizePixel = 0
+closeBtn.Parent = topbar
+
+closeBtn.MouseButton1Click:Connect(function()
+    gui:Destroy()
+    print("GUI Closed")
+end)
+
+-- Status section
+local statusFrame = Instance.new("Frame")
+statusFrame.Size = UDim2.new(1, -20, 0, 60)
+statusFrame.Position = UDim2.new(0, 10, 0, 45)
+statusFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+statusFrame.BorderSizePixel = 1
+statusFrame.BorderColor3 = Color3.fromRGB(100, 100, 100)
+statusFrame.Parent = main
+
+local statusLabel = Instance.new("TextLabel")
+statusLabel.Size = UDim2.new(1, -10, 1, -10)
+statusLabel.Position = UDim2.new(0, 5, 0, 5)
+statusLabel.BackgroundTransparency = 1
+statusLabel.Text = "Ready to test cook time manipulation..."
+statusLabel.TextColor3 = Color3.fromRGB(150, 255, 150)
+statusLabel.TextSize = 14
+statusLabel.Font = Enum.Font.Code
+statusLabel.TextWrapped = true
+statusLabel.TextXAlignment = Enum.TextXAlignment.Left
+statusLabel.TextYAlignment = Enum.TextYAlignment.Top
+statusLabel.Parent = statusFrame
+
+-- Log section
+local logFrame = Instance.new("ScrollingFrame")
+logFrame.Size = UDim2.new(1, -20, 1, -280)
+logFrame.Position = UDim2.new(0, 10, 0, 115)
+logFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+logFrame.BorderSizePixel = 1
+logFrame.BorderColor3 = Color3.fromRGB(100, 100, 100)
+logFrame.ScrollBarThickness = 6
+logFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+logFrame.Parent = main
+
+local logLayout = Instance.new("UIListLayout")
+logLayout.SortOrder = Enum.SortOrder.LayoutOrder
+logLayout.Padding = UDim.new(0, 2)
+logLayout.Parent = logFrame
+
+logLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    logFrame.CanvasSize = UDim2.new(0, 0, 0, logLayout.AbsoluteContentSize.Y + 10)
+    logFrame.CanvasPosition = Vector2.new(0, logFrame.CanvasSize.Y.Offset)
+end)
+
+-- Test buttons section
+local buttonFrame = Instance.new("Frame")
+buttonFrame.Size = UDim2.new(1, -20, 0, 150)
+buttonFrame.Position = UDim2.new(0, 10, 1, -160)
+buttonFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+buttonFrame.BorderSizePixel = 1
+buttonFrame.BorderColor3 = Color3.fromRGB(100, 100, 100)
+buttonFrame.Parent = main
+
+-- Create test buttons
+local test1Btn = Instance.new("TextButton")
+test1Btn.Size = UDim2.new(0.48, 0, 0, 30)
+test1Btn.Position = UDim2.new(0.01, 0, 0, 5)
+test1Btn.BackgroundColor3 = Color3.fromRGB(50, 100, 200)
+test1Btn.Text = "Test 1: Timer Value Hack"
+test1Btn.TextColor3 = Color3.new(1, 1, 1)
+test1Btn.TextSize = 12
+test1Btn.Font = Enum.Font.GothamBold
+test1Btn.BorderSizePixel = 0
+test1Btn.Parent = buttonFrame
+
+local test2Btn = Instance.new("TextButton")
+test2Btn.Size = UDim2.new(0.48, 0, 0, 30)
+test2Btn.Position = UDim2.new(0.51, 0, 0, 5)
+test2Btn.BackgroundColor3 = Color3.fromRGB(50, 100, 200)
+test2Btn.Text = "Test 2: IsCooking Toggle"
+test2Btn.TextColor3 = Color3.new(1, 1, 1)
+test2Btn.TextSize = 12
+test2Btn.Font = Enum.Font.GothamBold
+test2Btn.BorderSizePixel = 0
+test2Btn.Parent = buttonFrame
+
+local test3Btn = Instance.new("TextButton")
+test3Btn.Size = UDim2.new(0.48, 0, 0, 30)
+test3Btn.Position = UDim2.new(0.01, 0, 0, 40)
+test3Btn.BackgroundColor3 = Color3.fromRGB(50, 100, 200)
+test3Btn.Text = "Test 3: Progress Bar Hack"
+test3Btn.TextColor3 = Color3.new(1, 1, 1)
+test3Btn.TextSize = 12
+test3Btn.Font = Enum.Font.GothamBold
+test3Btn.BorderSizePixel = 0
+test3Btn.Parent = buttonFrame
+
+local test4Btn = Instance.new("TextButton")
+test4Btn.Size = UDim2.new(0.48, 0, 0, 30)
+test4Btn.Position = UDim2.new(0.51, 0, 0, 40)
+test4Btn.BackgroundColor3 = Color3.fromRGB(50, 100, 200)
+test4Btn.Text = "Test 4: Network UpdateProperty"
+test4Btn.TextColor3 = Color3.new(1, 1, 1)
+test4Btn.TextSize = 12
+test4Btn.Font = Enum.Font.GothamBold
+test4Btn.BorderSizePixel = 0
+test4Btn.Parent = buttonFrame
+
+local test5Btn = Instance.new("TextButton")
+test5Btn.Size = UDim2.new(0.48, 0, 0, 30)
+test5Btn.Position = UDim2.new(0.01, 0, 0, 75)
+test5Btn.BackgroundColor3 = Color3.fromRGB(50, 100, 200)
+test5Btn.Text = "Test 5: Fast Cycle Ovens"
+test5Btn.TextColor3 = Color3.new(1, 1, 1)
+test5Btn.TextSize = 12
+test5Btn.Font = Enum.Font.GothamBold
+test5Btn.BorderSizePixel = 0
+test5Btn.Parent = buttonFrame
+
+local test6Btn = Instance.new("TextButton")
+test6Btn.Size = UDim2.new(0.48, 0, 0, 30)
+test6Btn.Position = UDim2.new(0.51, 0, 0, 75)
+test6Btn.BackgroundColor3 = Color3.fromRGB(50, 100, 200)
+test6Btn.Text = "Test 6: Spam Open/Close"
+test6Btn.TextColor3 = Color3.new(1, 1, 1)
+test6Btn.TextSize = 12
+test6Btn.Font = Enum.Font.GothamBold
+test6Btn.BorderSizePixel = 0
+test6Btn.Parent = buttonFrame
+
+local testAllBtn = Instance.new("TextButton")
+testAllBtn.Size = UDim2.new(1, -10, 0, 35)
+testAllBtn.Position = UDim2.new(0, 5, 0, 110)
+testAllBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+testAllBtn.Text = "RUN ALL TESTS"
+testAllBtn.TextColor3 = Color3.new(1, 1, 1)
+testAllBtn.TextSize = 14
+testAllBtn.Font = Enum.Font.GothamBold
+testAllBtn.BorderSizePixel = 0
+testAllBtn.Parent = buttonFrame
+
+local clearBtn = Instance.new("TextButton")
+clearBtn.Size = UDim2.new(0, 60, 0, 25)
+clearBtn.Position = UDim2.new(1, -65, 0, 5)
+clearBtn.BackgroundColor3 = Color3.fromRGB(150, 100, 50)
+clearBtn.Text = "Clear"
+clearBtn.TextColor3 = Color3.new(1, 1, 1)
+clearBtn.TextSize = 12
+clearBtn.Font = Enum.Font.GothamBold
+clearBtn.BorderSizePixel = 0
+clearBtn.Parent = topbar
+
+print("GUI Created Successfully!")
+
+-- Log functions
+local logCount = 0
+local function log(text, color)
+    logCount = logCount + 1
+    color = color or Color3.new(1, 1, 1)
+    
+    local entry = Instance.new("TextLabel")
+    entry.Name = "Log" .. logCount
+    entry.Size = UDim2.new(1, -10, 0, 18)
+    entry.BackgroundTransparency = 1
+    entry.Text = text
+    entry.TextColor3 = color
+    entry.TextSize = 11
+    entry.Font = Enum.Font.Code
+    entry.TextXAlignment = Enum.TextXAlignment.Left
+    entry.TextYAlignment = Enum.TextYAlignment.Top
+    entry.TextWrapped = false
+    entry.LayoutOrder = logCount
+    entry.Parent = logFrame
+end
+
+local function logSuccess(text)
+    log("✓ " .. text, Color3.fromRGB(150, 255, 150))
+end
+
+local function logError(text)
+    log("✗ " .. text, Color3.fromRGB(255, 100, 100))
+end
+
+local function logWarning(text)
+    log("⚠ " .. text, Color3.fromRGB(255, 200, 100))
+end
+
+local function logInfo(text)
+    log("  " .. text, Color3.fromRGB(200, 200, 255))
+end
+
+local function updateStatus(text, color)
+    statusLabel.Text = text
+    statusLabel.TextColor3 = color or Color3.fromRGB(150, 255, 150)
+end
+
+clearBtn.MouseButton1Click:Connect(function()
+    for _, child in ipairs(logFrame:GetChildren()) do
+        if child:IsA("TextLabel") then
+            child:Destroy()
+        end
+    end
+    logCount = 0
+    logSuccess("Log cleared")
+end)
+
+-- Teleport function
+local function smartTP(cf)
+    if root then
+        root.CFrame = cf
+        root.Velocity = Vector3.new()
+        root.RotVelocity = Vector3.new()
+        if humanoid then
+            humanoid.Sit = false
+        end
+        task.wait(0.1)
+    end
+end
+
+-- Helper functions
+local function findOvensWithPizza()
+    local ovens = {}
+    for _, o in ipairs(workspace.Ovens:GetChildren()) do
+        if #o:GetChildren() > 9 and o:FindFirstChild("IsCooking") and o:FindFirstChild("Bottom") then
+            local dough = nil
+            for _, d in ipairs(workspace.AllDough:GetChildren()) do
+                if (d.Position - o.Bottom.Position).Magnitude < 2 then
+                    dough = d
+                    break
+                end
+            end
+            if dough and o.IsCooking.Value then
+                table.insert(ovens, {oven = o, dough = dough})
+            end
+        end
+    end
+    return ovens
+end
+
+local function getOvenProgress(oven)
+    if oven:FindFirstChild("Door") and oven.Door:FindFirstChild("Meter") then
+        local sg = oven.Door.Meter:FindFirstChild("SurfaceGui")
+        if sg then
+            local pb = sg:FindFirstChild("ProgressBar")
+            if pb then
+                return pb:FindFirstChild("Bar")
+            end
+        end
+    end
+    return nil
+end
+
+local function isOvenDone(oven)
+    local bar = getOvenProgress(oven)
+    if bar then
+        local color = Vector3.new(bar.ImageColor3.r, bar.ImageColor3.g, bar.ImageColor3.b)
+        local targetColor = Vector3.new(.871, .518, .224) -- Orange = done
+        return (color - targetColor).Magnitude < .1
+    end
+    return false
+end
+
+-- TEST 1: Try to manipulate timer values directly
+local function test1_TimerValueHack()
+    log("=== TEST 1: Timer Value Hack ===", Color3.fromRGB(100, 255, 255))
+    updateStatus("Running Test 1...", Color3.fromRGB(255, 255, 100))
+    
+    local ovensWithPizza = findOvensWithPizza()
+    if #ovensWithPizza == 0 then
+        logWarning("No ovens with pizza cooking! Put a pizza in an oven first!")
+        updateStatus("Waiting for pizza in oven...", Color3.fromRGB(255, 200, 100))
+        return
+    end
+    
+    logInfo("Found " .. #ovensWithPizza .. " ovens with pizza cooking")
+    
+    for i, data in ipairs(ovensWithPizza) do
+        local oven = data.oven
+        logInfo("Testing oven " .. i)
+        
+        -- Record initial state
+        local initialCooking = oven.IsCooking.Value
+        logInfo("Initial IsCooking: " .. tostring(initialCooking))
+        
+        -- Try to find and manipulate timer-related values
+        local attempts = {
+            {obj = oven:FindFirstChild("IsCooking"), name = "IsCooking", value = false},
+            {obj = oven:FindFirstChild("CookTime"), name = "CookTime", value = 0},
+            {obj = oven:FindFirstChild("TimeLeft"), name = "TimeLeft", value = 0},
+            {obj = oven:FindFirstChild("Timer"), name = "Timer", value = 0},
+        }
+        
+        for _, attempt in ipairs(attempts) do
+            if attempt.obj then
+                local success, err = pcall(function()
+                    attempt.obj.Value = attempt.value
+                end)
+                if success then
+                    logSuccess("Set " .. attempt.name .. " = " .. tostring(attempt.value))
+                else
+                    logError("Failed to set " .. attempt.name .. ": " .. tostring(err))
+                end
+            else
+                logInfo(attempt.name .. " not found")
+            end
+        end
+        
+        -- Check if it worked
+        task.wait(0.5)
+        if not oven.IsCooking.Value or isOvenDone(oven) then
+            logSuccess("TEST 1 MIGHT WORK: Oven state changed!")
+        else
+            logError("TEST 1 FAILED: Oven still cooking normally")
+        end
+    end
+    
+    updateStatus("Test 1 complete", Color3.fromRGB(150, 255, 150))
+end
+
+-- TEST 2: Toggle IsCooking value repeatedly
+local function test2_IsCookingToggle()
+    log("=== TEST 2: IsCooking Toggle ===", Color3.fromRGB(100, 255, 255))
+    updateStatus("Running Test 2...", Color3.fromRGB(255, 255, 100))
+    
+    local ovensWithPizza = findOvensWithPizza()
+    if #ovensWithPizza == 0 then
+        logWarning("No ovens with pizza cooking!")
+        return
+    end
+    
+    logInfo("Toggling IsCooking 10 times rapidly...")
+    
+    for i, data in ipairs(ovensWithPizza) do
+        local oven = data.oven
+        
+        for j = 1, 10 do
+            pcall(function()
+                oven.IsCooking.Value = false
+                task.wait(0.05)
+                oven.IsCooking.Value = true
+                task.wait(0.05)
+            end)
+        end
+        
+        task.wait(0.5)
+        if isOvenDone(oven) or not oven.IsCooking.Value then
+            logSuccess("TEST 2 MIGHT WORK: Pizza state changed!")
+        else
+            logError("TEST 2 FAILED: Still cooking normally")
+        end
+    end
+    
+    updateStatus("Test 2 complete", Color3.fromRGB(150, 255, 150))
+end
+
+-- TEST 3: Manipulate progress bar directly
+local function test3_ProgressBarHack()
+    log("=== TEST 3: Progress Bar Hack ===", Color3.fromRGB(100, 255, 255))
+    updateStatus("Running Test 3...", Color3.fromRGB(255, 255, 100))
+    
+    local ovensWithPizza = findOvensWithPizza()
+    if #ovensWithPizza == 0 then
+        logWarning("No ovens with pizza cooking!")
+        return
+    end
+    
+    for i, data in ipairs(ovensWithPizza) do
+        local oven = data.oven
+        local bar = getOvenProgress(oven)
+        
+        if bar then
+            logInfo("Trying to set progress bar to orange (done)...")
+            
+            local success, err = pcall(function()
+                bar.ImageColor3 = Color3.fromRGB(222, 132, 57) -- Orange = done
+                bar.Size = UDim2.new(1, 0, 1, 0) -- Full bar
+            end)
+            
+            if success then
+                logSuccess("Progress bar changed visually!")
+                task.wait(0.5)
+                
+                -- Check if it affects game logic
+                if not oven.IsCooking.Value then
+                    logSuccess("TEST 3 MIGHT WORK: Oven stopped cooking!")
+                else
+                    logWarning("TEST 3 PARTIAL: Visual only, no logic change")
+                end
+            else
+                logError("Failed to change progress bar: " .. tostring(err))
+            end
+        else
+            logError("Couldn't find progress bar for oven " .. i)
+        end
+    end
+    
+    updateStatus("Test 3 complete", Color3.fromRGB(150, 255, 150))
+end
+
+-- TEST 4: Use network to update properties
+local function test4_NetworkUpdate()
+    log("=== TEST 4: Network UpdateProperty ===", Color3.fromRGB(100, 255, 255))
+    updateStatus("Running Test 4...", Color3.fromRGB(255, 255, 100))
+    
+    if not network then
+        logError("Network not found! Script cannot work.")
+        return
+    end
+    
+    logSuccess("Network object found")
+    
+    local ovensWithPizza = findOvensWithPizza()
+    if #ovensWithPizza == 0 then
+        logWarning("No ovens with pizza cooking!")
+        return
+    end
+    
+    for i, data in ipairs(ovensWithPizza) do
+        local oven = data.oven
+        local dough = data.dough
+        
+        logInfo("Sending network commands for oven " .. i .. "...")
+        
+        -- Try various network commands
+        local commands = {
+            {name = "IsCooking -> false", func = function() 
+                network:FireServer("UpdateProperty", oven.IsCooking, "Value", false) 
+            end},
+            {name = "Dough -> Orange", func = function() 
+                network:FireServer("UpdateProperty", dough, "BrickColor", BrickColor.new("Bright orange")) 
+            end},
+            {name = "Dough -> Unanchored", func = function() 
+                network:FireServer("UpdateProperty", dough, "Anchored", false) 
+            end},
+        }
+        
+        for j, cmd in ipairs(commands) do
+            local success, err = pcall(cmd.func)
+            if success then
+                logSuccess(cmd.name .. " sent")
+            else
+                logError(cmd.name .. " failed: " .. tostring(err))
+            end
+            task.wait(0.3)
+        end
+        
+        task.wait(0.5)
+        if not oven.IsCooking.Value or isOvenDone(oven) then
+            logSuccess("TEST 4 MIGHT WORK: Network commands affected oven!")
+        else
+            logError("TEST 4 FAILED: No effect from network commands")
+        end
+    end
+    
+    updateStatus("Test 4 complete", Color3.fromRGB(150, 255, 150))
+end
+
+-- TEST 5: Rapidly cycle ovens open/close
+local function test5_FastCycle()
+    log("=== TEST 5: Fast Cycle Ovens ===", Color3.fromRGB(100, 255, 255))
+    updateStatus("Running Test 5...", Color3.fromRGB(255, 255, 100))
+    
+    local ovensWithPizza = findOvensWithPizza()
+    if #ovensWithPizza == 0 then
+        logWarning("No ovens with pizza cooking!")
+        return
+    end
+    
+    logInfo("Teleporting to kitchen...")
+    smartTP(CFrame.new(36.64, 3.80, 54.11))
+    task.wait(0.3)
+    
+    for i, data in ipairs(ovensWithPizza) do
+        local oven = data.oven
+        
+        logInfo("Cycling oven " .. i .. " door 5 times...")
+        
+        for j = 1, 5 do
+            pcall(function()
+                oven.Door.ClickDetector.Detector:FireServer()
+                task.wait(0.3)
+            end)
+        end
+        
+        task.wait(0.5)
+        if isOvenDone(oven) or not oven.IsCooking.Value then
+            logSuccess("TEST 5 MIGHT WORK: Fast cycling affected oven!")
+        else
+            logError("TEST 5 FAILED: No speedup from cycling")
+        end
+    end
+    
+    updateStatus("Test 5 complete", Color3.fromRGB(150, 255, 150))
+end
+
+-- TEST 6: Spam open/close at exact intervals
+local function test6_SpamOpenClose()
+    log("=== TEST 6: Spam Open/Close ===", Color3.fromRGB(100, 255, 255))
+    updateStatus("Running Test 6...", Color3.fromRGB(255, 255, 100))
+    
+    local ovensWithPizza = findOvensWithPizza()
+    if #ovensWithPizza == 0 then
+        logWarning("No ovens with pizza cooking!")
+        return
+    end
+    
+    smartTP(CFrame.new(36.64, 3.80, 54.11))
+    task.wait(0.3)
+    
+    logInfo("Spamming open/close for 5 seconds...")
+    
+    local startTime = tick()
+    local spamCount = 0
+    while tick() - startTime < 5 do
+        for _, data in ipairs(ovensWithPizza) do
+            pcall(function()
+                data.oven.Door.ClickDetector.Detector:FireServer()
+                spamCount = spamCount + 1
+            end)
+        end
+        task.wait(0.1)
+    end
+    
+    logInfo("Sent " .. spamCount .. " door commands")
+    task.wait(0.5)
+    
+    local anyChanged = false
+    for _, data in ipairs(ovensWithPizza) do
+        if isOvenDone(data.oven) or not data.oven.IsCooking.Value then
+            anyChanged = true
+            break
+        end
+    end
+    
+    if anyChanged then
+        logSuccess("TEST 6 MIGHT WORK: Spam method affected oven!")
+    else
+        logError("TEST 6 FAILED: No effect from spamming")
+    end
+    
+    updateStatus("Test 6 complete", Color3.fromRGB(150, 255, 150))
+end
+
+-- Run all tests
+local function runAllTests()
+    log("=== RUNNING ALL TESTS ===", Color3.fromRGB(255, 100, 255))
+    log("Make sure pizzas are cooking in ovens!", Color3.fromRGB(255, 255, 100))
+    updateStatus("Running all tests...", Color3.fromRGB(255, 100, 255))
+    
+    test1_TimerValueHack()
+    task.wait(2)
+    test2_IsCookingToggle()
+    task.wait(2)
+    test3_ProgressBarHack()
+    task.wait(2)
+    test4_NetworkUpdate()
+    task.wait(2)
+    test5_FastCycle()
+    task.wait(2)
+    test6_SpamOpenClose()
+    
+    log("=== ALL TESTS COMPLETE ===", Color3.fromRGB(255, 100, 255))
+    log("Check results above. If all failed, cook time is server-locked.", Color3.fromRGB(255, 255, 100))
+    updateStatus("All tests complete - Check log for results", Color3.fromRGB(150, 255, 150))
+end
+
+-- Connect buttons
+test1Btn.MouseButton1Click:Connect(function() 
+    spawn(test1_TimerValueHack) 
+end)
+
+test2Btn.MouseButton1Click:Connect(function() 
+    spawn(test2_IsCookingToggle) 
+end)
+
+test3Btn.MouseButton1Click:Connect(function() 
+    spawn(test3_ProgressBarHack) 
+end)
+
+test4Btn.MouseButton1Click:Connect(function() 
+    spawn(test4_NetworkUpdate) 
+end)
+
+test5Btn.MouseButton1Click:Connect(function() 
+    spawn(test5_FastCycle) 
+end)
+
+test6Btn.MouseButton1Click:Connect(function() 
+    spawn(test6_SpamOpenClose) 
+end)
+
+testAllBtn.MouseButton1Click:Connect(function() 
+    spawn(runAllTests) 
+end)
+
+-- Initialize
+logSuccess("Cook Time Speed Test loaded!")
+logSuccess("Network: " .. (network and "Found" or "NOT FOUND"))
+logInfo("Put pizzas in ovens and let them start cooking")
+logInfo("Then click a test button to try speed hacks")
+updateStatus("Ready - Start cooking pizzas, then test", Color3.fromRGB(150, 255, 150))
+
+print("=== COOK TIME SPEED TEST READY ===")
+print("GUI should be visible now!")

